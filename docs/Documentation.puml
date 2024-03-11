@@ -1,5 +1,7 @@
 #Authentication
+#SequenceDiagrams
 @startuml AuthRegistration
+
 Actor User as user
 Participant Client as app
 Participant Server as server
@@ -11,24 +13,26 @@ app -> server : POST Request processed
 server -> auth : Request passed
 auth -> auth : Request validation
 note over auth : Email and password validation
-alt Registration validation successfull
+alt Registration validation successful
     auth -> db : User saved
     auth -> server : Registration response [200]
-    server -> app : Registragion response [200]
+    server -> app : Registration response [200]
     app -> user : Response displayed [200]
 else
     auth -> server: Failed registration [400]
-    server -> app : Registragion response [400]
+    server -> app : Registration response [400]
     app -> user : Response displayed [400]
 end
 @enduml
 
 @startuml AuthLogin
+
 Actor User as user
 Participant Client as app
 Participant Server as server
 Participant AuthController as auth
 database Database as db
+
 user -> app : Login request
 app -> server : POST Request processed
 server -> auth : Request passed
@@ -46,3 +50,25 @@ else
     app -> user : Response displayed, user does not exist  [400]
 end
 @enduml
+
+@startuml AuthTokenValidity
+Actor User as user
+Participant Client as app
+Participant Server as server
+Participant AuthController as auth
+
+user -> app : Page accessing request
+app -> server : POST Token passed from LocalStorage
+server -> auth : Token passed to AuthController
+auth -> auth : Token validation
+alt Token valid
+    auth -> server : Response with token passed [200]
+    server -> app : Response with token passed [200]
+    app -> user : User authorized
+else
+    auth -> server : Response passed [401]
+    server -> app : Response passed [401]
+    app -> user : Response displayed, user not authorized [401]
+end
+@enduml
+#ActivityDiagrams

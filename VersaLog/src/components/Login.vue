@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import Navbar from './components/Nav.vue'
 </script>
 
 <template>
-  <Home></Home>
+<h1>TEST LOGIN</h1>
 </template>
 
 <style scoped>
+
 </style>
