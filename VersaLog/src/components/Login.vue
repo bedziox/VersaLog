@@ -1,30 +1,59 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <v-form class="w-50">
-    <v-container>
-      <v-col class="">
-        <v-row>
-          <v-text-field
-              label="Username or email"
-              hide-details
-              required
-          ></v-text-field>
-        </v-row>
-        <v-row>
-          <v-text-field
-              label="Password"
-              hide-details
-              required
-          ></v-text-field>
-        </v-row>
-        <v-btn>Submit</v-btn>
-      </v-col>
-    </v-container>
-  </v-form>
+  <div class="d-flex align-center justify-center" style="height: 100vh">
+    <v-sheet width="400" class="mx-auto">
+      <v-form fast-fail @submit.prevent="submitForm" ref="form">
+        <v-text-field
+          v-model="Username"
+          label="Username"
+          placeholder="Your username"
+        ></v-text-field>
+        <v-text-field
+          v-model="Password"
+          label="Password"
+          placeholder="Your password"
+        ></v-text-field>
+        <v-btn type="submit" color="primary" block class="mt-2">Sign up</v-btn>
+      </v-form>
+      <div class="mt-2">
+        <p class="text-body-2">
+          Don't have an account?
+          <v-btn><router-link to="/register">Register</router-link></v-btn>
+        </p>
+      </div>
+    </v-sheet>
+  </div>
 </template>
 
-<style scoped>
-
-</style>
+<script lang="ts">
+import axios from "axios";
+export default {
+  data() {
+    return {
+      FirstName: "",
+      LastName: "",
+      Username: "",
+      Password: "",
+      Email: "",
+    };
+  },
+  methods: {
+    async submitForm() {
+      try {
+        const response = await axios.post(
+          import.meta.env.VITE_BACKEND_URL + "Auth/login/",
+          this.$data,
+        );
+        this.$refs.form.reset();
+        alert("Login successful");
+        localStorage.setItem("jwtToken", response.data);
+        this.$router.push("/dashboard");
+      } catch (error) {
+        alert("Login unsuccessful: " + error.response.data);
+      }
+    },
+  },
+};
+</script>
+<style scoped></style>
