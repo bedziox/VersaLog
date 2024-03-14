@@ -11,31 +11,34 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { createVuetify } from "vuetify";
 
-const guard = function (to, from, next) {
-  // check for valid auth token
-  axios
-    .post(
-      import.meta.env.BACKEND_URL + "Auth/valid/",
-      localStorage.getItem("jwtToken"),
-    )
-    .then((response) => {
-      next();
-    })
-    .catch((error) => {
-      window.location.href = "/login";
-    });
-};
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     // without token
-    { path: "/", component: Home },
-    { path: "/login", component: Login },
-    { path: "/register", component: Register },
+    { path: "/", component: Home, meta: { requiresAuth: false } },
+    { path: "/login", component: Login, meta: { requiresAuth: false } },
+    { path: "/register", component: Register, meta: { requiresAuth: false } },
     // need authorization
-    { path: "/dashboard", component: Dashboard },
+    { path: "/dashboard", component: Dashboard, meta: { requiresAuth: true } },
   ],
+});
+
+router.beforeEach((to, from, next) => {
+  if (!to.meta.requiresAuth) {
+    next();
+  } else {
+    axios
+      .put(import.meta.env.VITE_BACKEND_URL + "Auth/valid/", {
+        token: localStorage.getItem("jwtToken"),
+      })
+      .then((response) => {
+        next();
+      })
+      .catch((error) => {
+        router.push("/");
+        alert("Token not valid, please log in again.");
+      });
+  }
 });
 
 const vuetify = createVuetify({

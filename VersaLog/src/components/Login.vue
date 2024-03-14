@@ -14,7 +14,7 @@
           label="Password"
           placeholder="Your password"
         ></v-text-field>
-        <v-btn type="submit" color="primary" block class="mt-2">Sign up</v-btn>
+        <v-btn type="submit" color="primary" block class="mt-2">Login</v-btn>
       </v-form>
       <div class="mt-2">
         <p class="text-body-2">

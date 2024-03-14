@@ -29,12 +29,12 @@
           label="Email"
           placeholder="example@email.com"
         ></v-text-field>
-        <v-btn type="submit" color="primary" block class="mt-2">Sign up</v-btn>
+        <v-btn type="submit" color="primary" block class="mt-2">Register</v-btn>
       </v-form>
       <div class="mt-2">
         <p class="text-body-2">
           Already have an account?
-          <v-btn><router-link to="/login">Sign in</router-link></v-btn>
+          <v-btn><router-link to="/login">Login</router-link></v-btn>
         </p>
       </div>
     </v-sheet>
@@ -62,7 +62,7 @@ export default {
         console.log("User registration response:", response.data);
         this.$refs.form.reset();
         alert("Registration successful");
-        this.$router.push("/home");
+        this.$router.push("/");
       } catch (error) {
         alert("Registration unsuccessful: " + error.response.data);
       }
