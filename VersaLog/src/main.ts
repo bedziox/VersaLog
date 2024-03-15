@@ -27,10 +27,17 @@ router.beforeEach((to, from, next) => {
   if (!to.meta.requiresAuth) {
     next();
   } else {
+    let token = sessionStorage.getItem("jwtToken");
     axios
-      .put(import.meta.env.VITE_BACKEND_URL + "Auth/valid/", {
-        token: localStorage.getItem("jwtToken"),
-      })
+      .post(
+        import.meta.env.VITE_BACKEND_URL + "Auth/valid/",
+        {},
+        {
+          params: {
+            token,
+          },
+        },
+      )
       .then((response) => {
         next();
       })

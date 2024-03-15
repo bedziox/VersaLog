@@ -47,7 +47,7 @@ export default {
         );
         this.$refs.form.reset();
         alert("Login successful");
-        localStorage.setItem("jwtToken", response.data);
+        sessionStorage.setItem("jwtToken", response.data);
         this.$router.push("/dashboard");
       } catch (error) {
         alert("Login unsuccessful: " + error.response.data);
