@@ -10,6 +10,12 @@ import Dashboard from "@/components/Dashboard.vue";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { createVuetify } from "vuetify";
+import Profile from "@/components/Profile.vue";
+import {useUserStore} from "@/stores/user.ts"
+import {createPinia} from "pinia";
+
+const pinia = createPinia();
+
 
 const router = createRouter({
   history: createWebHistory(),
@@ -20,10 +26,12 @@ const router = createRouter({
     { path: "/register", component: Register, meta: { requiresAuth: false } },
     // need authorization
     { path: "/dashboard", component: Dashboard, meta: { requiresAuth: true } },
+    { path: "/profile", component: Profile, meta: { requiresAuth: true } },
   ],
 });
 
 router.beforeEach((to, from, next) => {
+  const userStore = useUserStore()
   if (!to.meta.requiresAuth) {
     next();
   } else {
@@ -44,6 +52,7 @@ router.beforeEach((to, from, next) => {
       .catch((error) => {
         router.push("/");
         alert("Token not valid, please log in again.");
+        userStore.$reset();
       });
   }
 });
@@ -56,4 +65,8 @@ const vuetify = createVuetify({
   },
 });
 
-const app = createApp(App).use(router).use(vuetify).mount("#app");
+const app = createApp(App)
+    .use(router)
+    .use(vuetify)
+    .use(pinia)
+    .mount("#app");

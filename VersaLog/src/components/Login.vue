@@ -28,6 +28,8 @@
 
 <script lang="ts">
 import axios from "axios";
+import {useUserStore} from "@/stores/user.js"
+
 export default {
   data() {
     return {
@@ -41,13 +43,21 @@ export default {
   methods: {
     async submitForm() {
       try {
+        const userStore = useUserStore();
         const response = await axios.post(
           import.meta.env.VITE_BACKEND_URL + "Auth/login/",
           this.$data,
         );
         this.$refs.form.reset();
         alert("Login successful");
-        sessionStorage.setItem("jwtToken", response.data);
+        sessionStorage.setItem("jwtToken", response.data.token);
+        userStore.$patch({
+          isLoggedIn: true,
+          User: {
+            username: response.data.username,
+            id: response.data.id
+          }
+        })
         this.$router.push("/dashboard");
       } catch (error) {
         alert("Login unsuccessful: " + error.response.data);

@@ -1,9 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Training from "@/components/Training.vue";
+</script>
 
 <template>
-  <v-card>
-    <h1>TEST DASHBOARD</h1>
-  </v-card>
+  <h1>TEST DASHBOARD</h1>
+  <h2>Trainings:</h2>
+  <Training>
+    
+  </Training>
 </template>
 
 <style scoped></style>
