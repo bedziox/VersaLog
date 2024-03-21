@@ -5,31 +5,44 @@
     <v-sheet width="400" class="mx-auto">
       <v-form fast-fail @submit.prevent="submitForm" ref="form">
         <v-text-field
+          v-model="FirstName"
+          label="First Name"
+          placeholder="John"
+        ></v-text-field>
+        <v-text-field
+          v-model="LastName"
+          label="Last Name"
+          placeholder="Lemon"
+        ></v-text-field>
+        <v-text-field
           v-model="Username"
           label="Username"
           placeholder="Your username"
         ></v-text-field>
         <v-text-field
           v-model="Password"
-          label="Password"
+          label="password"
           placeholder="Your password"
+          type="password"
         ></v-text-field>
-        <v-btn type="submit" color="primary" block class="mt-2">Login</v-btn>
+        <v-text-field
+          v-model="Email"
+          label="Email"
+          placeholder="example@email.com"
+        ></v-text-field>
+        <v-btn type="submit" color="primary" block class="mt-2">Register</v-btn>
       </v-form>
       <div class="mt-2">
         <p class="text-body-2">
-          Don't have an account?
-          <v-btn><router-link to="/register">Register</router-link></v-btn>
+          Already have an account?
+          <v-btn><router-link to="/login">Login</router-link></v-btn>
         </p>
       </div>
     </v-sheet>
   </div>
 </template>
-
 <script lang="ts">
 import axios from "axios";
-import {useUserStore} from "@/stores/user.js"
-
 export default {
   data() {
     return {
@@ -43,27 +56,20 @@ export default {
   methods: {
     async submitForm() {
       try {
-        const userStore = useUserStore();
         const response = await axios.post(
-          import.meta.env.VITE_BACKEND_URL + "Auth/login/",
+          import.meta.env.VITE_BACKEND_URL + "Auth/register/",
           this.$data,
         );
+        console.log("User registration response:", response.data);
         this.$refs.form.reset();
-        alert("Login successful");
-        sessionStorage.setItem("jwtToken", response.data.token);
-        userStore.$patch({
-          isLoggedIn: true,
-          User: {
-            username: response.data.username,
-            id: response.data.id
-          }
-        })
-        this.$router.push("/dashboard");
+        alert("Registration successful");
+        this.$router.push("/");
       } catch (error) {
-        alert("Login unsuccessful: " + error.response.data);
+        alert("Registration unsuccessful: " + error.response.data);
       }
     },
   },
 };
 </script>
+
 <style scoped></style>

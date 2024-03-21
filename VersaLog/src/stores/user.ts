@@ -12,6 +12,9 @@ export const useUserStore = defineStore("user", {
       getUsername: (state) => {
           return state.User.username;
       },
+    getId: (state) => {
+        return state.User.id;
+    },
     }
 });
 

@@ -4,18 +4,17 @@ import { createApp } from "vue";
 import axios from "axios";
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home.vue";
-import Login from "@/components/Login.vue";
-import Register from "@/components/Register.vue";
-import Dashboard from "@/components/Dashboard.vue";
+import Login from "@/views/Login.vue";
+import Register from "@/views/Register.vue";
+import Dashboard from "@/views/Dashboard.vue";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { createVuetify } from "vuetify";
-import Profile from "@/components/Profile.vue";
-import {useUserStore} from "@/stores/user.ts"
-import {createPinia} from "pinia";
+import Profile from "@/views/Profile.vue";
+import { useUserStore } from "@/stores/user.ts";
+import { createPinia } from "pinia";
 
 const pinia = createPinia();
-
 
 const router = createRouter({
   history: createWebHistory(),
@@ -31,7 +30,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const userStore = useUserStore()
+  const userStore = useUserStore();
   if (!to.meta.requiresAuth) {
     next();
   } else {
@@ -65,8 +64,4 @@ const vuetify = createVuetify({
   },
 });
 
-const app = createApp(App)
-    .use(router)
-    .use(vuetify)
-    .use(pinia)
-    .mount("#app");
+const app = createApp(App).use(router).use(vuetify).use(pinia).mount("#app");

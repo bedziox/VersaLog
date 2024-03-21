@@ -27,18 +27,18 @@ a,
     justify-content: center;
   }
 
-  /*#app {*/
-  /*  display: grid;*/
-  /*  grid-template-columns: 1fr 1fr;*/
-  /*  padding: 1rem 2rem;*/
-  /*}*/
+  #app {
+    /*display: grid;*/
+    /*grid-template-columns: 1fr 1fr;*/
+    padding: 1rem 2rem;
+  }
 }
 
-@media (max-width: 1024px) {
-  body{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+/*@media (max-width: 1024px) {*/
+/*  body{*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*  }*/
   
-}
+/*}*/
