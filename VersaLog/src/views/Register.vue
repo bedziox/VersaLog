@@ -1,8 +1,8 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="d-flex align-center justify-center" style="height: 100vh">
-    <v-sheet width="400" class="mx-auto">
+  <div class="container" style="height: 100vh">
+    <v-sheet class="mx-auto">
       <v-form fast-fail @submit.prevent="submitForm" ref="form">
         <v-text-field
           v-model="FirstName"
@@ -72,4 +72,21 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.v-sheet {
+  display: flex;
+  margin-top: 20px;
+  flex-direction: column;
+  padding: 3rem 0;
+  align-items: center;
+  width: 30vw;
+}
+.v-form {
+  width: 80%;
+}
+</style>

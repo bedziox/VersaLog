@@ -1,5 +1,6 @@
-import { defineStore } from 'pinia'
-import {ref} from "vue";
+import { defineStore } from "pinia";
+import { ref } from "vue";
+import { state } from "vue-tsc/out/shared";
 
 export const useUserStore = defineStore("user", {
   state: () => {
@@ -8,17 +9,17 @@ export const useUserStore = defineStore("user", {
       User: null as User | null,
     };
   },
-    getters: {
-      getUsername: (state) => {
-          return state.User.username;
-      },
-    getId: (state) => {
-        return state.User.id;
+  getters: {
+    getUsername: (state): string => {
+      return state.User.username;
     },
-    }
+    getId: (state): number => {
+      return state.User.id;
+    },
+  },
 });
 
-export interface User{
-    username: string,
-    id: number;
+export interface User {
+  username: string;
+  id: number;
 }

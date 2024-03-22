@@ -1,11 +1,11 @@
 @import './base.css';
 
 
-/*#app{*/
-/*  display: flex;*/
-/*  margin: 0 auto;*/
-/*  min-width: 1000px;*/
-/*}*/
+#app{
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  margin: 0 auto;
+}
 a,
 .green {
   text-decoration: none;
@@ -17,20 +17,6 @@ a,
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-    justify-content: center;
-  }
-
-  #app {
-    /*display: grid;*/
-    /*grid-template-columns: 1fr 1fr;*/
-    padding: 1rem 2rem;
   }
 }
 

@@ -29,9 +29,16 @@ export default {
 </script>
 <template class="d-flex-column mb-6">
   <h1>TEST PROFIL :)</h1>
-  <v-card class="ma-2 pa-2"> Hello {{ userStore.getUsername }}</v-card>
+  <v-card class="item"> Hello {{ userStore.getUsername }}</v-card>
 
-  <v-btn class="ma-2 pa-2" @click="deleteAccount">Delete account</v-btn>
+  <v-btn class="item" @click="deleteAccount">Delete account</v-btn>
 </template>
 
-<style scoped></style>
+<style scoped>
+* {
+  padding: 10px;
+}
+.item {
+  margin: 1rem;
+}
+</style>

@@ -1,8 +1,8 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="d-flex align-center justify-center" style="height: 100vh">
-    <v-sheet width="400" class="mx-auto">
+  <div class="container">
+    <v-sheet class="">
       <v-form fast-fail @submit.prevent="submitForm" ref="form">
         <v-text-field
           v-model="Username"
@@ -17,7 +17,7 @@
         ></v-text-field>
         <v-btn type="submit" color="primary" block class="mt-2">Login</v-btn>
       </v-form>
-      <div class="mt-2">
+      <div class="">
         <p class="text-body-2">
           Don't have an account?
           <v-btn><router-link to="/register">Register</router-link></v-btn>
@@ -67,4 +67,21 @@ export default {
   },
 };
 </script>
-<style scoped></style>
+<style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.v-sheet {
+  display: flex;
+  margin-top: 100px;
+  flex-direction: column;
+  padding: 3rem 0;
+  align-items: center;
+  width: 25vw;
+}
+.v-form {
+  width: 80%;
+}
+</style>
