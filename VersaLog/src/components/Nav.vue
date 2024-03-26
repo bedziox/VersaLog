@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { useTheme } from "vuetify";
-import {useUserStore} from "@/stores/user";
+import { useUserStore } from "@/stores/user";
 
 const theme = useTheme();
-const userStore = useUserStore()
+const userStore = useUserStore();
 
 function toggleTheme() {
   theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
 }
-function logout(){
-  sessionStorage.removeItem("jwtToken");
+function logout() {
+  localStorage.removeItem("jwtToken");
   userStore.$reset();
   alert("Logged out successfully");
-  window.location.href = '/';
+  window.location.href = "/";
 }
 </script>
 
@@ -30,9 +30,9 @@ function logout(){
     </v-app-bar>
     <v-app-bar v-if="userStore.$state.isLoggedIn">
       <v-app-bar-title
-      ><router-link to="/dashboard"
-      ><v-btn>VersaLog</v-btn></router-link
-      ></v-app-bar-title
+        ><router-link to="/dashboard"
+          ><v-btn>VersaLog</v-btn></router-link
+        ></v-app-bar-title
       >
       <v-btn @click="toggleTheme">Change theme</v-btn>
       <router-link to="profile"><v-btn>Profile</v-btn></router-link>

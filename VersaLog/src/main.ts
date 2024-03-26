@@ -1,6 +1,6 @@
 import "./assets/main.css";
 import App from "./App.vue";
-import { createApp } from "vue";
+import { createApp, watch } from "vue";
 import axios from "axios";
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "@/views/Home.vue";
@@ -34,7 +34,7 @@ router.beforeEach((to, from, next) => {
   if (!to.meta.requiresAuth) {
     next();
   } else {
-    let token = sessionStorage.getItem("jwtToken");
+    let token = localStorage.getItem("jwtToken");
     axios
       .post(
         import.meta.env.VITE_BACKEND_URL + "Auth/valid/",
@@ -49,13 +49,13 @@ router.beforeEach((to, from, next) => {
         next();
       })
       .catch((error) => {
+        localStorage.removeItem("jwtToken");
         router.push("/");
         alert("Token not valid, please log in again.");
         userStore.$reset();
       });
   }
 });
-
 const vuetify = createVuetify({
   components,
   directives,

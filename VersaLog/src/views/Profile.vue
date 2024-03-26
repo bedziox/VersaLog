@@ -27,7 +27,7 @@ export default {
   },
 };
 </script>
-<template class="d-flex-column mb-6">
+<template class="">
   <h1>TEST PROFIL :)</h1>
   <v-card class="item"> Hello {{ userStore.getUsername }}</v-card>
 

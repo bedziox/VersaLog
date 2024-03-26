@@ -15,9 +15,9 @@
           placeholder="Your password"
           type="password"
         ></v-text-field>
-        <v-btn type="submit" color="primary" block class="mt-2">Login</v-btn>
+        <v-btn type="submit" color="primary" block class="">Login</v-btn>
       </v-form>
-      <div class="">
+      <div class="register-span">
         <p class="text-body-2">
           Don't have an account?
           <v-btn><router-link to="/register">Register</router-link></v-btn>
@@ -30,7 +30,22 @@
 <script lang="ts">
 import axios from "axios";
 import { useUserStore } from "@/stores/user.js";
-
+import { onMounted } from "vue";
+async function loadExercises() {
+  try {
+    const userStore = useUserStore();
+    const response = await axios.get(
+      import.meta.env.VITE_BACKEND_URL +
+        "Training/user?userId=" +
+        userStore.getId,
+    );
+    userStore.$patch({
+      Trainings: response.data,
+    });
+  } catch (error) {
+    alert("Something wrong " + error.response.data);
+  }
+}
 export default {
   data() {
     return {
@@ -51,7 +66,7 @@ export default {
         );
         this.$refs.form.reset();
         alert("Login successful");
-        sessionStorage.setItem("jwtToken", response.data.token);
+        localStorage.setItem("jwtToken", response.data.token);
         userStore.$patch({
           isLoggedIn: true,
           User: {
@@ -59,6 +74,7 @@ export default {
             id: response.data.id,
           },
         });
+        await loadExercises();
         this.$router.push("/dashboard");
       } catch (error) {
         alert("Login unsuccessful: " + error.response.data);
@@ -83,5 +99,8 @@ export default {
 }
 .v-form {
   width: 80%;
+}
+.register-span {
+  padding: 0 10px;
 }
 </style>

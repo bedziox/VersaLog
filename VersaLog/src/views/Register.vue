@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="container" style="height: 100vh">
+  <div class="container">
     <v-sheet class="mx-auto">
       <v-form fast-fail @submit.prevent="submitForm" ref="form">
         <v-text-field
@@ -21,7 +21,7 @@
         ></v-text-field>
         <v-text-field
           v-model="Password"
-          label="password"
+          label="Password"
           placeholder="Your password"
           type="password"
         ></v-text-field>
@@ -32,7 +32,7 @@
         ></v-text-field>
         <v-btn type="submit" color="primary" block class="mt-2">Register</v-btn>
       </v-form>
-      <div class="mt-2">
+      <div class="login-span">
         <p class="text-body-2">
           Already have an account?
           <v-btn><router-link to="/login">Login</router-link></v-btn>
@@ -80,13 +80,16 @@ export default {
 }
 .v-sheet {
   display: flex;
-  margin-top: 20px;
+  margin-top: 100px;
   flex-direction: column;
   padding: 3rem 0;
   align-items: center;
-  width: 30vw;
+  width: 25vw;
 }
 .v-form {
   width: 80%;
+}
+.login-span {
+  padding: 0 10px;
 }
 </style>
