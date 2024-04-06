@@ -11,12 +11,20 @@ import axios from "axios";
 <script lang="ts"></script>
 
 <template class="flex-column">
-  <h1>TEST DASHBOARD</h1>
-  <v-divider class=""></v-divider>
+  <h1>DASHBOARD</h1>
+  <v-divider class="separator"></v-divider>
   <TrainingHistory></TrainingHistory>
-  <v-divider class=""></v-divider>
+  <v-divider class="separator"></v-divider>
   <AddTraining></AddTraining>
   <ExerciseList></ExerciseList>
 </template>
 
-<style scoped></style>
+<style scoped>
+.separator {
+  width: 100%;
+  height: 3px;
+  background-color: #ffffff;
+  margin-bottom: 10px;
+  opacity: 100%;
+}
+</style>

@@ -13,6 +13,7 @@ export default {
     return {
       isEditing: false,
       training: this.trainingData,
+      statuses: ["New", "Completed", "inProgress", "Done", "Cancelled"],
     };
   },
   created() {},
@@ -38,7 +39,6 @@ export default {
       this.isEditing = !this.isEditing;
     },
     saveTraining() {
-      // Implement logic to send updated training data to your backend API
       axios
         .put(
           import.meta.env.VITE_BACKEND_URL +
@@ -46,7 +46,7 @@ export default {
           this.trainingData,
         )
         .then((response) => {
-          this.$emit("trainingUpdated", this.training); // Notify parent of update
+          this.$emit("trainingUpdated", this.training);
           this.isEditing = false;
           alert("Training saved successfully");
         })
@@ -57,134 +57,100 @@ export default {
   },
 };
 </script>
+
 <template>
-  <div class="training-item">
-    <template v-if="!isEditing">
-      <span class="date">{{ Date(training.date) }}</span>
-      <span class="status">{{ trainingData.status }}</span>
-      <span class="exercises">
-        <template v-if="trainingData.exercises.length">
-          Exercises:
-          <ol>
-            <li v-for="exercise in trainingData.exercises" :key="exercise.id">
-              {{ exercise.name }}
-            </li>
-          </ol>
-        </template>
-      </span>
-      <span class="results">
-        <template v-if="trainingData.results.length">
-          Results:
-          <ol>
-            <li v-for="result in trainingData.results" :key="result.id">
-              {{ result.name }}: {{ result.value }}
-            </li>
-          </ol>
-        </template>
-      </span>
-    </template>
+  <v-card class="training-item">
+    <v-card-text v-if="!isEditing">
+      <v-row>
+        <v-col cols="6">
+          <span class="date"
+            >Date assigned:
+            {{
+              new Date(this.training.dateAssigned)
+                .toISOString()
+                .substring(0, 10)
+            }}</span
+          >
+        </v-col>
+        <v-col cols="6">
+          <span class="status">Status: </span>
+          <span class="status">{{ this.training.status }}</span>
+        </v-col>
+        <v-col cols="12" class="exercises-and-results">
+          <template v-if="this.training.exercises.length">
+            <v-list
+              v-for="exercise in this.training.exercises"
+              :key="exercise.id"
+            >
+              <v-list-item v-row>
+                <v-list-item-title>{{ exercise.name }}</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </template>
+        </v-col>
+      </v-row>
+    </v-card-text>
 
-    <template v-if="isEditing">
-      <input type="text" v-model="trainingData.date" placeholder="Date" />
-      <select v-model="trainingData.status">
-        <option value="new">New</option>
-        <option value="completed">Completed</option>
-        <option value="inProgress">In progress</option>
-        <option value="done">Done</option>
-        <option value="cancelled">Cancelled</option>
-      </select>
-      <div class="exercise-list">
-        <ol>
-          <li v-for="exercise in trainingData.exercises" :key="exercise.id">
-            <input type="text" v-model="exercise.name" placeholder="Exercise" />
-          </li>
-        </ol>
-      </div>
-      <div class="result-list">
-        <ol>
-          <li v-for="result in trainingData.results" :key="result.id">
-            <input
-              type="text"
-              v-model="result.name"
-              placeholder="Result Name"
-            />
-            <input
-              type="text"
-              v-model="result.value"
-              placeholder="Result Value"
-            />
-          </li>
-        </ol>
-      </div>
-    </template>
+    <v-card-text v-if="isEditing">
+      <v-row>
+        <v-col cols="6">
+          <v-text-field
+            label="Date"
+            type="date"
+            v-model="training.dateAssigned"
+          />
+        </v-col>
+        <v-col cols="6">
+          <v-select v-model="this.training.status" :items="this.statuses" />
+        </v-col>
+        <v-col cols="12" class="exercises-and-results">
+          <v-subheader>Exercises:</v-subheader>
+          <v-list
+            v-for="exercise in this.training.exercises"
+            :key="exercise.id"
+          >
+            <v-list-item v-row>
+              <v-list-item-content>
+                <v-text-field v-model="exercise.name" label="Exercise" />
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <v-list v-for="result in trainingData.results" :key="result.id">
+            <v-list-item v-row>
+              <v-list-item-content>
+                <v-text-field v-model="result.value" label="Result: " />
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-col> </v-row
+      >g
+    </v-card-text>
 
-    <div class="actions">
-      <button @click="editTraining">
-        {{ isEditing ? "Cancel" : "Edit" }}
-      </button>
-      <button @click="saveTraining" v-if="isEditing">Save</button>
-      <button @click="deleteTraining" v-if="isEditing">Delete</button>
-    </div>
-  </div>
+    <v-card-actions>
+      <v-spacer />
+      <v-btn @click="editTraining">{{ isEditing ? "Cancel" : "Edit" }}</v-btn>
+      <v-btn @click="saveTraining" v-if="isEditing" color="primary">Save</v-btn>
+      <v-btn @click="deleteTraining" v-if="isEditing" color="error"
+        >Delete</v-btn
+      >
+    </v-card-actions>
+    <v-divider class="separator" />
+  </v-card>
 </template>
 
-CSS
-
 <style scoped>
-.training-item {
+.training-item .exercises-and-results {
   display: flex;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  width: 100%; /* Added width for consistent size */
+  flex-direction: row;
+  flex-wrap: wrap; /* Wrap if content overflows */
+  align-items: center; /* Align vertically */
 }
-
-.training-item span {
-  margin-right: 10px;
-  /* Added flex: 1 for equal width distribution */
-  flex: 1;
-}
-
-.training-item .actions {
-  margin-left: auto;
-}
-
 .date {
   font-weight: bold;
 }
-
-.exercises,
-.results {
-  font-style: italic;
-  margin-right: 20px;
-  /* Added flex: 1 for equal width distribution */
-  flex: 1;
-}
-
-.exercise-list,
-.result-list {
-  display: flex;
-  flex-direction: column;
-  margin-left: 10px;
-}
-
-.exercise-list li,
-.result-list li {
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
-}
-
-.result-list li input {
-  margin-right: 5px;
-  flex: 1;
-}
-
-/* Added styles for separator */
 .separator {
   width: 100%;
   height: 1px;
   background-color: #ddd;
-  margin-bottom: 10px;
 }
 </style>

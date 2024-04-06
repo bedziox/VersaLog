@@ -10,13 +10,22 @@ export default {
   data() {
     return {
       trainings: [],
+      visibleTrainings: [],
     };
   },
   methods: {
     handleTrainingDeleted(deletedTrainingId) {
-      // Update training data based on deleted training ID
       this.trainings = this.trainings.filter(
         (training) => training.trainingId !== deletedTrainingId,
+      );
+    },
+    showMore() {
+      const additionalCount = 5;
+      this.visibleTrainings.push(
+        ...this.trainings.slice(
+          this.visibleTrainings.length,
+          this.visibleTrainings.length + additionalCount,
+        ),
       );
     },
   },
@@ -32,15 +41,21 @@ export default {
     } catch (error) {
       alert("Something wrong " + error.response.data);
     }
+    this.visibleTrainings = this.trainings.slice(0, 5);
   },
 };
 </script>
 
 <template>
   <h3>Training history</h3>
-  <li v-for="training in trainings" :key="training.id">
-    <Training :training-data="training" />
-  </li>
+  <ul>
+    <li v-for="training in visibleTrainings" :key="training.id">
+      <Training :training-data="training" />
+    </li>
+  </ul>
+  <button v-if="trainings.length > visibleTrainings.length" @click="showMore">
+    Show More
+  </button>
 </template>
 
 <style scoped>
