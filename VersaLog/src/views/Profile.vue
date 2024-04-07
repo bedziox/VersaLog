@@ -27,11 +27,23 @@ export default {
   },
 };
 </script>
-<template class="">
-  <h1>TEST PROFIL :)</h1>
-  <v-card class="item"> Hello {{ userStore.getUsername }}</v-card>
-
-  <v-btn class="item" @click="deleteAccount">Delete account</v-btn>
+<template>
+  <div class="profile-container">
+    <v-card class="item">
+      Hello {{ userStore.getUsername }}
+      <v-avatar> <v-icon>mdi-account </v-icon></v-avatar></v-card
+    >
+    <v-card>
+      <v-card-text>
+        <v-card-title>Your Profile</v-card-title>
+        <v-card-text p="">
+          This is your profile page. You can edit your profile information and
+          manage your account.
+        </v-card-text>
+      </v-card-text>
+    </v-card>
+    <v-btn class="item" @click="deleteAccount">Delete account</v-btn>
+  </div>
 </template>
 
 <style scoped>
@@ -40,5 +52,10 @@ export default {
 }
 .item {
   margin: 1rem;
+}
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
 }
 </style>

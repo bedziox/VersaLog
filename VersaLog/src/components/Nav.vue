@@ -10,6 +10,7 @@ function toggleTheme() {
 }
 function logout() {
   localStorage.removeItem("jwtToken");
+  localStorage.removeItem("id");
   userStore.$reset();
   alert("Logged out successfully");
   window.location.href = "/";

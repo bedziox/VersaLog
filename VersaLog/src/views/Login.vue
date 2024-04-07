@@ -74,6 +74,7 @@ export default {
             id: response.data.id,
           },
         });
+        localStorage.setItem("id", userStore.getId);
         await loadExercises();
         this.$router.push("/dashboard");
       } catch (error) {

@@ -22,11 +22,11 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
-  let userId = userStore.getId;
   if (!to.meta.requiresAuth) {
     next();
   } else {
     let token = localStorage.getItem("jwtToken");
+    let userId = localStorage.getItem("id");
     axios
       .post(
         import.meta.env.VITE_BACKEND_URL + "Auth/valid/",
@@ -39,8 +39,14 @@ router.beforeEach((to, from, next) => {
         },
       )
       .then((response) => {
+        userStore.$patch({
+          isLoggedIn: true,
+          User: {
+            username: response.data.username,
+            id: response.data.userId,
+          },
+        });
         next();
-        userStore.isLoggedIn = true;
       })
       .catch((error) => {
         localStorage.removeItem("jwtToken");
