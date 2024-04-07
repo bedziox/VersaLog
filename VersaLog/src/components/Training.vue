@@ -89,6 +89,13 @@ export default {
           </template>
         </v-col>
       </v-row>
+      <!--      <v-row>-->
+      <!--        <v-list v-for="result in this.training.results">-->
+      <!--          <v-list-item v-row>-->
+      <!--            <v-list-item-title>{{ result }}</v-list-item-title>-->
+      <!--          </v-list-item>-->
+      <!--        </v-list>-->
+      <!--      </v-row>-->
     </v-card-text>
 
     <v-card-text v-if="isEditing">
@@ -115,15 +122,15 @@ export default {
               </v-list-item-content>
             </v-list-item>
           </v-list>
-          <v-list v-for="result in trainingData.results" :key="result.id">
-            <v-list-item v-row>
-              <v-list-item-content>
-                <v-text-field v-model="result.value" label="Result: " />
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-col> </v-row
-      >g
+          <!--          <v-list v-for="result in trainingData.results" :key="result.id">-->
+          <!--            <v-list-item v-row>-->
+          <!--              <v-list-item-content>-->
+          <!--                <v-text-field v-model="result.value" label="Result: " />-->
+          <!--              </v-list-item-content>-->
+          <!--            </v-list-item>-->
+          <!--          </v-list>-->
+        </v-col>
+      </v-row>
     </v-card-text>
 
     <v-card-actions>

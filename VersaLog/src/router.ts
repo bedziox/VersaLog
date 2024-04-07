@@ -22,6 +22,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore();
+  let userId = userStore.getId;
   if (!to.meta.requiresAuth) {
     next();
   } else {
@@ -33,6 +34,7 @@ router.beforeEach((to, from, next) => {
         {
           params: {
             token,
+            userId,
           },
         },
       )

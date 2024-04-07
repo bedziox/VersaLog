@@ -47,20 +47,29 @@
         </v-list-item>
       </v-list>
       <v-text-field
+        ref="newExerciseName"
         v-model="newExerciseName"
         label="Exercise Name"
         v-if="showNewExerciseInput"
+        :rules="[() => !!newExerciseName || 'This field is required']"
+        required
       ></v-text-field>
       <v-text-field
+        ref="newExerciseDescription"
         v-model="newExerciseDescription"
         label="Exercise Description"
+        :rules="[() => !!newExerciseDescription || 'This field is required']"
         v-if="showNewExerciseInput"
+        required
       ></v-text-field>
       <v-select
+        ref="newExerciseType"
         v-model="newExerciseType"
         :items="this.exerciseTypes"
+        :rules="[() => !!newExerciseType || 'This field is required']"
         label="Exercise Type"
         v-if="showNewExerciseInput"
+        required
       >
       </v-select>
       <v-btn v-if="showNewExerciseInput" color="primary" @click="addNewExercise"
@@ -131,15 +140,19 @@ export default {
       }
     },
     addNewExercise() {
-      this.newTraining.exercises.push({
-        name: this.newExerciseName,
-        type: this.newExerciseType,
-        description: this.newExerciseDescription,
-      });
-      this.createExercise();
-      this.showNewExerciseInput = false;
-      this.newExerciseName = "";
-      this.newExerciseType = "";
+      try {
+        let exercise = {
+          name: this.newExerciseName,
+          type: this.newExerciseType,
+          description: this.newExerciseDescription,
+        };
+        this.createExercise();
+        this.showNewExerciseInput = false;
+        this.newExerciseName = "";
+        this.newExerciseType = "";
+      } catch (error) {
+        console.log(error);
+      }
     },
     saveTraining() {
       try {
@@ -163,6 +176,7 @@ export default {
         .then((response) => {
           this.exercises.push(response.data);
           this.showNewExerciseModal = false;
+          this.newTraining.exercises.push(response.data);
           alert("New exercise added");
         })
         .catch((error) => {
