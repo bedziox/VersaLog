@@ -1,4 +1,175 @@
-#Authentication
+#UseCaseDiagrams
+@startuml Registration
+(Enter register page) as enter
+(Fill form data) as form
+(Submit form) as submit
+(Pass DTO) as pass
+(Validate data) as validate
+(Register user) as register
+(Send response) as response
+(Redirect with response) as redirect
+
+User -> enter
+enter -> form
+form -> submit
+submit -> Client
+Client --> pass
+pass --> Server
+Server -left-> validate
+validate -left-> register
+register -left-> response
+response --> Client
+Client --> redirect
+redirect --> User
+
+@enduml
+
+@startuml Login
+(Enter login page) as enter
+(Fill login and password) as form
+(Submit form) as submit
+(Pass DTO) as pass
+(Validate data) as validate
+(Check user existing) as check_existing
+(Generate JWT) as generate
+(Send response) as response
+(Handle response) as handle_response
+
+User -> enter
+enter -> form
+form -> submit
+submit -> Client
+Client --> pass
+pass --> Server
+Server -left-> validate
+validate -left-> check_existing
+check_existing -> generate
+generate -> response
+response --> Client
+Client --> handle_response
+handle_response --> User
+
+@enduml
+
+#ClassDiagrams
+@startuml ServerClassDiagram
+class AuthController {
+  + Register(UserDto request) : User
+  + Login(UserDto request) : User
+}
+
+class ExerciseController {
+  + GetAll() : List<Exercise>
+  + GetById(id : int) : Exercise?
+  + AddExercise(request : Exercise) : Exercise
+  + EditExercise(request : Exercise) : ActionResult
+  + DeleteExercise(exerciseId : int) : ActionResult
+}
+
+class TrainingController {
+  + GetAll() : List<Training>
+  + GetById(id : int) : Training?
+  + GetAllByUser(userId : int) : List<Training>
+  + GetByUserAndId(userId : int, trainingId : int) : Training
+  + AddTraining(request : TrainingDto) : ActionResult<Training>
+  + EditTraining(id : int, trainingDto : TrainingDto) : IActionResult
+  + DeleteTraining(trainingId : int) : ActionResult
+}
+
+class UserController {
+  + GetAll() : ActionResult<User>
+  + GetById(id : int) : ActionResult<User>
+  + DeleteUser(id : int) : ActionResult
+}
+
+class UserDto {
+  - Id : int
+  - FirstName : string
+  - LastName : string
+  - Username : string
+  - Password : string
+  - Email : string
+  - Token : string
+}
+
+class TrainingDto {
+  - TrainingId : int
+  - DateAssigned : DateTime
+  - Status : Status
+  - Exercises : ICollection<Exercise>
+  - Results : ICollection<string>
+  - UserId : int
+}
+
+class UserBuilder {
+  + BuildUser(UserDto request) : User
+}
+
+class UserValidation {
+  + ValidateEmail(email : string) : bool
+  + ValidatePassword(password : string) : bool
+}
+
+enum ExerciseType {
+  Strength
+  Balance
+  Cycling
+  Flexibility
+  Aerobic
+  Jogging
+  TeamGame
+}
+
+enum Status {
+  New
+  InProgress
+  Done
+  Cancelled
+  Outdated
+}
+
+User "1" -- "many" Training : ma
+Training "many" -- "many" Exercise : zawiera
+
+AuthController -- "1" User
+ExerciseController -- "1" Exercise
+TrainingController -- "1" Training
+UserController -- "1" User
+
+class Exercise {
+  - ExerciseId : int
+  - Name : string
+  - Description : string
+  - Type : ExerciseType
+}
+
+class Training {
+  - TrainingId : int
+  - DateAssigned : DateTime
+  - Status : Status
+  - Exercises : List<Exercise>
+  - Results : List<string>
+  - User : User
+  - UserId : int
+}
+
+class User {
+  - UserId : int
+  - FirstName : string
+  - LastName : string
+  - Username : string
+  - PasswordHash : string
+  - Email : string
+  - Trainings : List<Training>
+}
+
+
+@enduml
+
+
+@startuml ClientClassDiagram
+@enduml
+
 #SequenceDiagrams
 @startuml AuthRegistration
 
