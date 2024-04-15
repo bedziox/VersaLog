@@ -9,36 +9,37 @@
         label="Training Date"
         type="date"
       ></v-text-field>
-      <v-select
+      <v-autocomplete
+        style="min-width: 500px"
         v-model="selectedExercise"
         :items="exercises"
         label="Add Exercises"
         persistent-hint
         :item-props="itemProps"
       >
-        <template #prepend>
-          <v-text-field
-            v-model="filterText"
-            label="Filter"
-            type="search"
-            @input="$emit('input', filterText)"
-          ></v-text-field>
-        </template>
-      </v-select>
+      </v-autocomplete>
       <v-btn fab small @click="addExercise" color="primary">
         Add exercise
       </v-btn>
       <v-divider></v-divider>
-      <v-list v-if="newTraining.exercises.length > 0" two-line subheader>
-        <v-subheader>Exercises</v-subheader>
+      <v-subheader>Exercises</v-subheader>
+      <v-list
+        v-if="newTraining.exerciseResults.length > 0"
+        two-line
+        subheader
+        style=""
+      >
         <v-list-item
-          v-for="exercise in newTraining.exercises"
-          :key="exercise.name"
+          v-for="exercise in newTraining.exerciseResults"
+          :key="exercise.exerciseResultId"
+          class="exeResultItem"
         >
-          <v-list-item-content>
-            <v-list-item-title>{{ exercise.name }}</v-list-item-title>
-            <v-list-item-subtitle>{{ exercise.type }}</v-list-item-subtitle>
-          </v-list-item-content>
+          <v-list-item-title>{{ exercise.exercise.name }}</v-list-item-title>
+          <v-list-item-subtitle>{{
+            exercise.exercise.type
+          }}</v-list-item-subtitle>
+          <v-text-field style="min-width: 30px" label="Sets"> </v-text-field>
+          <v-text-field style="min-width: 30px" label="Reps"> </v-text-field>
           <v-list-item-action>
             <v-btn color="error" small @click="removeExercise(exercise)">
               Delete
@@ -98,7 +99,8 @@ export default {
     return {
       newTraining: {
         dateAssigned: new Date().toISOString().slice(0, 10),
-        exercises: [],
+        exerciseResults: [],
+        note: "",
         userId: 0,
       },
       selectedExercise: null,
@@ -122,7 +124,12 @@ export default {
   methods: {
     addExercise() {
       if (this.selectedExercise) {
-        this.newTraining.exercises.push({ ...this.selectedExercise });
+        this.newTraining.exerciseResults.push({
+          exercise: this.selectedExercise,
+          reps: 0,
+          sets: 0,
+          result: "",
+        });
         this.selectedExercise = null;
       } else {
         this.showNewExerciseInput = true;
@@ -132,20 +139,15 @@ export default {
       this.showNewExerciseInput = false;
     },
     removeExercise(exercise) {
-      const index = this.newTraining.exercises.findIndex(
-        (ex) => ex.exerciseId === exercise.exerciseId,
+      const index = this.newTraining.exerciseResults.findIndex(
+        (ex) => ex.exerciseResultId === exercise.exerciseResultId,
       );
       if (index > -1) {
-        this.newTraining.exercises.splice(index, 1);
+        this.newTraining.exerciseResults.splice(index, 1);
       }
     },
     addNewExercise() {
       try {
-        let exercise = {
-          name: this.newExerciseName,
-          type: this.newExerciseType,
-          description: this.newExerciseDescription,
-        };
         this.createExercise();
         this.showNewExerciseInput = false;
         this.newExerciseName = "";
@@ -160,6 +162,7 @@ export default {
           .post(import.meta.env.VITE_BACKEND_URL + "Training", this.newTraining)
           .then((response) => {
             alert("Training added successfully");
+            this.$emit("forceUpdate");
           });
       } catch (error) {
         alert("There was a problem creating the training.");
@@ -175,8 +178,19 @@ export default {
         })
         .then((response) => {
           this.exercises.push(response.data);
+          let exercise = {
+            name: this.newExerciseName,
+            type: this.newExerciseType,
+            description: this.newExerciseDescription,
+          };
           this.showNewExerciseModal = false;
-          this.newTraining.exercises.push(response.data);
+          let exerciseResult = {
+            exercise: exercise,
+            reps: 0,
+            sets: 0,
+            result: "",
+          };
+          this.newTraining.exerciseResults.push(exerciseResult);
           alert("New exercise added");
         })
         .catch((error) => {
@@ -203,14 +217,11 @@ export default {
     const userStore = useUserStore();
     this.newTraining.userId = userStore.getId;
   },
-  computed: {
-    filteredExercises() {
-      return this.exercises.filter((exercise) =>
-        exercise.name.toLowerCase().includes(this.filterText.toLowerCase()),
-      );
-    },
-  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.v-text-field {
+  min-width: 30px;
+}
+</style>

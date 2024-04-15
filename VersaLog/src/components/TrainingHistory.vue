@@ -28,20 +28,27 @@ export default {
         ),
       );
     },
+    async fetchData() {
+      try {
+        const userStore = useUserStore();
+        const response = await axios.get(
+          import.meta.env.VITE_BACKEND_URL +
+            "Training/user?userId=" +
+            userStore.getId,
+        );
+        this.trainings = response.data;
+      } catch (error) {
+        alert("Something wrong " + error.response.data);
+      }
+      this.visibleTrainings = this.trainings.slice(0, 5);
+    },
   },
-  async created() {
-    try {
-      const userStore = useUserStore();
-      const response = await axios.get(
-        import.meta.env.VITE_BACKEND_URL +
-          "Training/user?userId=" +
-          userStore.getId,
-      );
-      this.trainings = response.data;
-    } catch (error) {
-      alert("Something wrong " + error.response.data);
-    }
-    this.visibleTrainings = this.trainings.slice(0, 5);
+
+  created() {
+    this.fetchData();
+  },
+  handleForceUpdate() {
+    this.fetchData();
   },
 };
 </script>

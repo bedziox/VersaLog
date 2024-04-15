@@ -13,7 +13,7 @@ export default {
     return {
       isEditing: false,
       training: this.trainingData,
-      statuses: ["New", "Completed", "inProgress", "Done", "Cancelled"],
+      statuses: ["New", "InProgress", "Done", "Cancelled", "Outdated"],
     };
   },
   created() {},
@@ -29,6 +29,7 @@ export default {
           .then((response) => {
             this.$emit("trainingDeleted", this.training.id);
             alert("Training deleted successfully");
+            this.$emit("forceUpdate");
           })
           .catch((error) => {
             alert("There was a problem during training deletion");
@@ -54,6 +55,14 @@ export default {
           alert("There was a problem during training saving");
         });
     },
+    removeExercise(exerciseResult) {
+      const index = this.training.exerciseResults.findIndex(
+          (ex) => ex.exerciseResultId === exerciseResult.exerciseResultId,
+      );
+      if (index > -1) {
+        this.training.exerciseResults.splice(index, 1);
+      }
+    },
   },
 };
 </script>
@@ -63,7 +72,7 @@ export default {
     <v-card-text v-if="!isEditing">
       <v-row>
         <v-col cols="6">
-          <span class="date"
+          <span
             >Date assigned:
             {{
               new Date(this.training.dateAssigned)
@@ -77,25 +86,27 @@ export default {
           <span class="status">{{ this.training.status }}</span>
         </v-col>
         <v-col cols="12" class="exercises-and-results">
-          <template v-if="this.training.exercises.length">
+          <template v-if="this.training.exerciseResults.length">
             <v-list
-              v-for="exercise in this.training.exercises"
+              v-for="exercise in this.training.exerciseResults"
               :key="exercise.id"
             >
-              <v-list-item v-row>
-                <v-list-item-title>{{ exercise.name }}</v-list-item-title>
-              </v-list-item>
+              <v-card style="min-width: 30px; min-height: 30px">
+                <v-card-title>{{ exercise.exercise.name }}</v-card-title>
+                <v-card-text>Sets: {{ exercise.sets }}</v-card-text>
+                <v-card-text>Reps: {{ exercise.reps }}</v-card-text>
+                <v-card-text>Result: {{ exercise.result }}</v-card-text>
+              </v-card>
             </v-list>
           </template>
         </v-col>
+        <v-col>
+          <span>Notes:</span>
+          <v-card-text>
+            {{ this.training.notes }}
+          </v-card-text>
+        </v-col>
       </v-row>
-      <!--      <v-row>-->
-      <!--        <v-list v-for="result in this.training.results">-->
-      <!--          <v-list-item v-row>-->
-      <!--            <v-list-item-title>{{ result }}</v-list-item-title>-->
-      <!--          </v-list-item>-->
-      <!--        </v-list>-->
-      <!--      </v-row>-->
     </v-card-text>
 
     <v-card-text v-if="isEditing">
@@ -110,25 +121,26 @@ export default {
         <v-col cols="6">
           <v-select v-model="this.training.status" :items="this.statuses" />
         </v-col>
+        <v-card-text>Exercises:</v-card-text>
         <v-col cols="12" class="exercises-and-results">
-          <v-subheader>Exercises:</v-subheader>
           <v-list
-            v-for="exercise in this.training.exercises"
+            v-for="exercise in this.training.exerciseResults"
             :key="exercise.id"
           >
-            <v-list-item v-row>
-              <v-list-item-content>
-                <v-text-field v-model="exercise.name" label="Exercise" />
-              </v-list-item-content>
-            </v-list-item>
+            <v-card>
+              <v-card-text> {{ exercise.exercise.name }}</v-card-text>
+              <v-text-field label="Sets" v-model"> </v-text-field>
+              <v-text-field label="Reps"> </v-text-field>
+              <v-text-field label="Result"> </v-text-field>
+              <v-btn icon="mdi-delete" @click="removeExercise(exercise)"></v-btn>
+            </v-card>
           </v-list>
-          <!--          <v-list v-for="result in trainingData.results" :key="result.id">-->
-          <!--            <v-list-item v-row>-->
-          <!--              <v-list-item-content>-->
-          <!--                <v-text-field v-model="result.value" label="Result: " />-->
-          <!--              </v-list-item-content>-->
-          <!--            </v-list-item>-->
-          <!--          </v-list>-->
+        </v-col>
+        <v-col>
+          <span>Notes:</span>
+          <v-text-field>
+            {{ this.training.notes }}
+          </v-text-field>
         </v-col>
       </v-row>
     </v-card-text>
@@ -149,15 +161,21 @@ export default {
 .training-item .exercises-and-results {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap; /* Wrap if content overflows */
-  align-items: center; /* Align vertically */
-}
-.date {
-  font-weight: bold;
+  flex-wrap: wrap;
+  align-items: center;
 }
 .separator {
   width: 100%;
   height: 1px;
   background-color: #ddd;
+}
+.v-text-field {
+  min-width: 100px;
+}
+
+.v-card {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 </style>

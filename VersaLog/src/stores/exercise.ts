@@ -3,24 +3,32 @@ import { defineStore } from "pinia";
 export const useExerciseStore = defineStore("exercise", {
   state: () => {
     return {
-      Exercises: [] as Exercise[],
+      Exercises: [] as exercise[],
     };
   },
   getters: {
     getExercise:
       (state) =>
-      (exerciseId: number): Exercise => {
+      (exerciseId: number): exercise => {
         return state.Exercises[exerciseId];
       },
-    getAllExercises: (state): Exercise[] => {
+    getAllExercises: (state): exercise[] => {
       return state.Exercises;
     },
   },
 });
 
-export interface Exercise {
+export interface exercise {
   id: number;
   name: string;
   description: string;
   type: string;
+}
+
+export interface exerciseResult {
+  exerciseResultId: number;
+  exercise: exercise;
+  sets: number;
+  reps: number;
+  result: string;
 }

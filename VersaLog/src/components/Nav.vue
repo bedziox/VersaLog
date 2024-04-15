@@ -37,6 +37,7 @@ function logout() {
       >
       <v-btn @click="toggleTheme">Change theme</v-btn>
       <router-link to="profile"><v-btn>Profile</v-btn></router-link>
+      <router-link to="summary"><v-btn>Summary</v-btn> </router-link>
       <v-btn @click="logout">Logout</v-btn>
     </v-app-bar>
   </v-container>

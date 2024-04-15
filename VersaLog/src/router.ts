@@ -6,6 +6,7 @@ import Dashboard from "@/views/Dashboard.vue";
 import Profile from "@/views/Profile.vue";
 import { useUserStore } from "@/stores/user";
 import axios from "axios";
+import Summary from "@/views/Summary.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -17,6 +18,7 @@ const router = createRouter({
     // need authorization
     { path: "/dashboard", component: Dashboard, meta: { requiresAuth: true } },
     { path: "/profile", component: Profile, meta: { requiresAuth: true } },
+    { path: "/summary", component: Summary, meta: { requiresAuth: true } },
   ],
 });
 
