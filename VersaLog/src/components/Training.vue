@@ -57,7 +57,7 @@ export default {
     },
     removeExercise(exerciseResult) {
       const index = this.training.exerciseResults.findIndex(
-          (ex) => ex.exerciseResultId === exerciseResult.exerciseResultId,
+        (ex) => ex.exerciseResultId === exerciseResult.exerciseResultId,
       );
       if (index > -1) {
         this.training.exerciseResults.splice(index, 1);
@@ -129,18 +129,22 @@ export default {
           >
             <v-card>
               <v-card-text> {{ exercise.exercise.name }}</v-card-text>
-              <v-text-field label="Sets" v-model"> </v-text-field>
-              <v-text-field label="Reps"> </v-text-field>
-              <v-text-field label="Result"> </v-text-field>
-              <v-btn icon="mdi-delete" @click="removeExercise(exercise)"></v-btn>
+              <v-text-field label="Sets" v-model="exercise.sets">
+              </v-text-field>
+              <v-text-field label="Reps" v-model="exercise.reps">
+              </v-text-field>
+              <v-text-field label="Result" v-model="exercise.result">
+              </v-text-field>
+              <v-btn
+                icon="mdi-delete"
+                @click="removeExercise(exercise)"
+              ></v-btn>
             </v-card>
           </v-list>
         </v-col>
         <v-col>
           <span>Notes:</span>
-          <v-text-field>
-            {{ this.training.notes }}
-          </v-text-field>
+          <v-text-field v-model:="this.training.notes"> </v-text-field>
         </v-col>
       </v-row>
     </v-card-text>
