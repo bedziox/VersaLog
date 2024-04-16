@@ -30,6 +30,7 @@ export default {
     },
     async fetchData() {
       try {
+        this.training = [];
         const userStore = useUserStore();
         const response = await axios.get(
           import.meta.env.VITE_BACKEND_URL + "Training/user",
@@ -40,7 +41,6 @@ export default {
           },
         );
         this.trainings = response.data;
-        console.log(this.trainings);
         this.trainings.sort(function (a, b) {
           return new Date(b.dateAssigned) - new Date(a.dateAssigned);
         });

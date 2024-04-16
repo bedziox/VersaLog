@@ -1,4 +1,6 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import TrainingCompact from "@/components/TrainingCompact.vue";
+</script>
 <script lang="ts">
 import { useUserStore } from "@/stores/user";
 import axios from "axios";
@@ -37,7 +39,6 @@ export default {
           },
         );
         this.trainings = response.data;
-        console.log(this.trainings);
         this.trainings.sort(function (a, b) {
           return new Date(b.dateAssigned) - new Date(a.dateAssigned);
         });
@@ -80,15 +81,47 @@ export default {
       </template>
     </v-tooltip>
 
-    <v-select
-      v-model="type"
-      :items="this.exerciseTypes"
-      label="Exercise Type"
-      style="min-width: 10rem"
-    ></v-select>
+    <v-tooltip
+      location="top"
+      text="Select trainings containing specific exercise type"
+    >
+      <template v-slot:activator="{ props }">
+        <v-select
+          v-bind="props"
+          v-model="type"
+          :items="this.exerciseTypes"
+          label="Exercise Type"
+          style="min-width: 10rem"
+        ></v-select
+      ></template>
+    </v-tooltip>
     <v-btn color="success" @click="fetchData">Submit</v-btn>
   </v-container>
-  <v-container> </v-container>
+  <v-card-title>Trainings:</v-card-title>
+  <v-container>
+    <v-table>
+      <tbody>
+        <tr v-if="trainings" v-for="training in trainings">
+          <TrainingCompact :training-data="training"></TrainingCompact>
+        </tr>
+        <template v-if="!trainings.length">
+          <tr>
+            <v-card-title>No trainings to display for this period</v-card-title>
+          </tr>
+        </template>
+      </tbody>
+    </v-table>
+  </v-container>
 </template>
 
-<style scoped></style>
+<style scoped>
+.v-table {
+  width: 100%;
+}
+.v-row {
+  width: 80%;
+}
+template {
+  max-width: 60rem;
+}
+</style>
