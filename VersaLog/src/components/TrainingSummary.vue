@@ -26,16 +26,15 @@ export default {
       try {
         const userStore = useUserStore();
         const response = await axios.get(
-          import.meta.env.VITE_BACKEND_URL +
-            "Training/user/type/date?userId=" +
-            userStore.getId +
-            this.type ??
-            "&type=" +
-              this.type +
-              "&startDate=" +
-              this.dateStart +
-              "&endDate=" +
-              this.dateEnd,
+          import.meta.env.VITE_BACKEND_URL + "Training/user/type/date/",
+          {
+            params: {
+              userId: userStore.getId,
+              dateStart: this.dateStart,
+              dateEnd: this.dateEnd,
+              type: this.type,
+            },
+          },
         );
         this.trainings = response.data;
         console.log(this.trainings);
@@ -60,14 +59,32 @@ export default {
       align-items: center;
     "
   >
-    <v-text-field label="Date" type="date" v-model="dateStart" />
-    <v-text-field label="Date" type="date" v-model="dateEnd" />
+    <v-tooltip location="top" text="Default value is today's date">
+      <template v-slot:activator="{ props }">
+        <v-text-field
+          v-bind="props"
+          label="Date"
+          type="date"
+          v-model="dateStart"
+        />
+      </template>
+    </v-tooltip>
+    <v-tooltip location="top" text="Default value is today's date - end of day">
+      <template v-slot:activator="{ props }">
+        <v-text-field
+          v-bind="props"
+          label="Date"
+          type="date"
+          v-model="dateEnd"
+        />
+      </template>
+    </v-tooltip>
+
     <v-select
-      ref="newExerciseType"
       v-model="type"
       :items="this.exerciseTypes"
       label="Exercise Type"
-      style="min-width: 100px"
+      style="min-width: 10rem"
     ></v-select>
     <v-btn color="success" @click="fetchData">Submit</v-btn>
   </v-container>

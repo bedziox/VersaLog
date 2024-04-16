@@ -23,7 +23,7 @@
       <v-card>
         <v-card-text>
           <v-card-title>Key Features</v-card-title>
-          <v-list two-line>
+          <v-list lines="three">
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title>

@@ -108,7 +108,7 @@ export default {
         <v-col>
           <span><b>Notes: </b></span>
           <v-card-text>
-            {{ this.training.notes }}
+            {{ this.training.note }}
           </v-card-text>
         </v-col>
       </v-row>
@@ -149,7 +149,7 @@ export default {
         </v-col>
         <v-col>
           <span>Notes:</span>
-          <v-text-field v-model:="this.training.notes"> </v-text-field>
+          <v-text-field v-model:="this.training.note"> </v-text-field>
         </v-col>
       </v-row>
     </v-card-text>
@@ -188,8 +188,12 @@ export default {
 }
 
 .v-card {
+  margin: 5px;
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+.v-list {
+  width: 10rem;
 }
 </style>

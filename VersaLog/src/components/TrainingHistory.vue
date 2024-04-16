@@ -32,9 +32,12 @@ export default {
       try {
         const userStore = useUserStore();
         const response = await axios.get(
-          import.meta.env.VITE_BACKEND_URL +
-            "Training/user?userId=" +
-            userStore.getId,
+          import.meta.env.VITE_BACKEND_URL + "Training/user",
+          {
+            params: {
+              userId: userStore.getId,
+            },
+          },
         );
         this.trainings = response.data;
         console.log(this.trainings);

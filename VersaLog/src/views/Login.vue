@@ -35,9 +35,12 @@ async function loadExercises() {
   try {
     const userStore = useUserStore();
     const response = await axios.get(
-      import.meta.env.VITE_BACKEND_URL +
-        "Training/user?userId=" +
-        userStore.getId,
+      import.meta.env.VITE_BACKEND_URL + "Training/user",
+      {
+        params: {
+          userId: userStore.getId,
+        },
+      },
     );
     userStore.$patch({
       Trainings: response.data,
