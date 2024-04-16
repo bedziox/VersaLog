@@ -9,9 +9,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <h1>Training summary</h1>
-  <v-divider class="separator"></v-divider>
-  <TrainingSummary></TrainingSummary>
+  <v-card style="max-width: 60rem; min-width: 40rem">
+    <v-card-title>Training summary</v-card-title>
+    <v-divider class="separator"></v-divider>
+    <TrainingSummary></TrainingSummary>
+  </v-card>
 </template>
 
 <style scoped></style>

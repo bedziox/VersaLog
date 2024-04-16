@@ -12,17 +12,18 @@
       <v-autocomplete
         style="min-width: 500px"
         v-model="selectedExercise"
-        :items="exercises"
+        :items="filteredExercises"
         label="Add Exercises"
         persistent-hint
         :item-props="itemProps"
+        @input="filterExercises"
       >
       </v-autocomplete>
       <v-btn fab small @click="addExercise" color="primary">
         Add exercise
       </v-btn>
       <v-divider></v-divider>
-      <v-subheader>Exercises</v-subheader>
+      <v-card-text><b>Exercises: </b></v-card-text>
       <v-list
         v-if="newTraining.exerciseResults.length > 0"
         two-line
@@ -38,8 +39,18 @@
           <v-list-item-subtitle>{{
             exercise.exercise.type
           }}</v-list-item-subtitle>
-          <v-text-field style="min-width: 30px" label="Sets"> </v-text-field>
-          <v-text-field style="min-width: 30px" label="Reps"> </v-text-field>
+          <v-text-field
+            style="min-width: 30px"
+            label="Sets"
+            v-model="exercise.sets"
+          >
+          </v-text-field>
+          <v-text-field
+            style="min-width: 30px"
+            label="Reps"
+            v-model="exercise.reps"
+          >
+          </v-text-field>
           <v-list-item-action>
             <v-btn color="error" small @click="removeExercise(exercise)">
               Delete
@@ -120,6 +131,16 @@ export default {
       newExerciseDescription: "",
       showNewExerciseModal: false,
     };
+  },
+  computed: {
+    filteredExercises() {
+      const searchTerm = (this.selectedExercise || "").toLowerCase();
+      return this.exercises.filter(
+        (exercise) =>
+          exercise.name.toLowerCase().includes(searchTerm) ||
+          exercise.type.toLowerCase().includes(searchTerm),
+      );
+    },
   },
   methods: {
     addExercise() {
@@ -204,6 +225,7 @@ export default {
         subtitle: item.type,
       };
     },
+    filterExercises(value) {},
   },
   created() {
     const response = axios

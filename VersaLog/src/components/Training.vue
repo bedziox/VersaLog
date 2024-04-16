@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import Exercise from "@/components/Exercise.vue";
-</script>
+<script setup lang="ts"></script>
 
 <script lang="ts">
 import axios from "axios";
@@ -68,12 +66,12 @@ export default {
 </script>
 
 <template>
-  <v-card class="training-item">
+  <v-card class="training-item" style="max-width: 600px; margin: 5px">
     <v-card-text v-if="!isEditing">
       <v-row>
         <v-col cols="6">
           <span
-            >Date assigned:
+            ><b>Date assigned:</b>
             {{
               new Date(this.training.dateAssigned)
                 .toISOString()
@@ -82,7 +80,7 @@ export default {
           >
         </v-col>
         <v-col cols="6">
-          <span class="status">Status: </span>
+          <span class="status"><b>Status: </b> </span>
           <span class="status">{{ this.training.status }}</span>
         </v-col>
         <v-col cols="12" class="exercises-and-results">
@@ -90,9 +88,16 @@ export default {
             <v-list
               v-for="exercise in this.training.exerciseResults"
               :key="exercise.id"
+              style="margin: 5px"
             >
               <v-card style="min-width: 30px; min-height: 30px">
-                <v-card-title>{{ exercise.exercise.name }}</v-card-title>
+                <v-card-title v-bind="props"
+                  >{{ exercise.exercise.name }}
+                  <v-tooltip activator="parent" location="top"
+                    >{{ exercise.exercise.description }}
+                  </v-tooltip></v-card-title
+                >
+                <v-card-subtitle>{{ exercise.exercise.type }}</v-card-subtitle>
                 <v-card-text>Sets: {{ exercise.sets }}</v-card-text>
                 <v-card-text>Reps: {{ exercise.reps }}</v-card-text>
                 <v-card-text>Result: {{ exercise.result }}</v-card-text>
@@ -101,7 +106,7 @@ export default {
           </template>
         </v-col>
         <v-col>
-          <span>Notes:</span>
+          <span><b>Notes: </b></span>
           <v-card-text>
             {{ this.training.notes }}
           </v-card-text>
@@ -167,6 +172,11 @@ export default {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
+}
+.exercises-and-results {
+  max-width: 100%;
+  display: flex;
+  justify-content: space-evenly;
 }
 .separator {
   width: 100%;

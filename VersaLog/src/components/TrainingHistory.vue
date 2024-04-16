@@ -37,6 +37,10 @@ export default {
             userStore.getId,
         );
         this.trainings = response.data;
+        console.log(this.trainings);
+        this.trainings.sort(function (a, b) {
+          return new Date(b.dateAssigned) - new Date(a.dateAssigned);
+        });
       } catch (error) {
         alert("Something wrong " + error.response.data);
       }
@@ -55,11 +59,9 @@ export default {
 
 <template>
   <h3>Training history</h3>
-  <ul>
-    <li v-for="training in visibleTrainings" :key="training.id">
-      <Training :training-data="training" />
-    </li>
-  </ul>
+  <v-list v-for="training in visibleTrainings" :key="training.id">
+    <Training :training-data="training" />
+  </v-list>
   <button v-if="trainings.length > visibleTrainings.length" @click="showMore">
     Show More
   </button>
@@ -68,8 +70,5 @@ export default {
 <style scoped>
 * {
   max-width: 50vw;
-}
-li {
-  list-style: none;
 }
 </style>
