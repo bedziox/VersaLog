@@ -72,6 +72,7 @@ export default {
         localStorage.setItem("jwtToken", response.data.token);
         userStore.$patch({
           isLoggedIn: true,
+          isAdmin: response.data.role === "Admin",
           User: {
             username: response.data.username,
             id: response.data.id,
@@ -79,7 +80,11 @@ export default {
         });
         localStorage.setItem("id", userStore.getId);
         await loadExercises();
-        this.$router.push("/dashboard");
+        if (userStore.$state.isAdmin == true) {
+          this.$router.push("/dashboard");
+        } else {
+          this.$router.push("/dashboard");
+        }
       } catch (error) {
         alert("Login unsuccessful: " + error.response.data);
       }

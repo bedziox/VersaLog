@@ -1,14 +1,11 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
-import { state } from "vue-tsc/out/shared";
+import type { User } from "@/util.ts";
+import type { Training } from "@/util.ts";
 import type { Exercise } from "@/stores/exercise";
-import type { Training, User } from "@/util";
 
-export const useUserStore = defineStore("user", {
+export const useSelectedUserStore = defineStore("selectedUser", {
   state: () => {
     return {
-      isLoggedIn: false,
-      isAdmin: false,
       User: null as User | null,
     };
   },

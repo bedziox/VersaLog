@@ -10,9 +10,9 @@
         type="date"
       ></v-text-field>
       <v-autocomplete
-        style="min-width: 500px"
+        style="min-width: 20rem"
         v-model="selectedExercise"
-        :items="filteredExercises"
+        :items="exercises"
         label="Add Exercises"
         persistent-hint
         :item-props="itemProps"
@@ -40,13 +40,13 @@
             exercise.exercise.type
           }}</v-list-item-subtitle>
           <v-text-field
-            style="min-width: 30px"
+            style="min-width: 5rem"
             label="Sets"
             v-model="exercise.sets"
           >
           </v-text-field>
           <v-text-field
-            style="min-width: 30px"
+            style="min-width: 5rem"
             label="Reps"
             v-model="exercise.reps"
           >
@@ -131,16 +131,6 @@ export default {
       newExerciseDescription: "",
       showNewExerciseModal: false,
     };
-  },
-  computed: {
-    filteredExercises() {
-      const searchTerm = (this.selectedExercise || "").toLowerCase();
-      return this.exercises.filter(
-        (exercise) =>
-          exercise.name.toLowerCase().includes(searchTerm) ||
-          exercise.type.toLowerCase().includes(searchTerm),
-      );
-    },
   },
   methods: {
     addExercise() {
@@ -244,6 +234,6 @@ export default {
 
 <style scoped>
 .v-text-field {
-  min-width: 30px;
+  min-width: 5rem;
 }
 </style>

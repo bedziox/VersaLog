@@ -19,6 +19,16 @@ const router = createRouter({
     { path: "/dashboard", component: Dashboard, meta: { requiresAuth: true } },
     { path: "/profile", component: Profile, meta: { requiresAuth: true } },
     { path: "/summary", component: Summary, meta: { requiresAuth: true } },
+    {
+      path: "/admin/profile",
+      component: Profile,
+      meta: { requiresAuth: true, requiresAdmin: true },
+    },
+    {
+      path: "/admin/summary",
+      component: Summary,
+      meta: { requiresAuth: true, requiresAdmin: true },
+    },
   ],
 });
 
@@ -43,6 +53,7 @@ router.beforeEach((to, from, next) => {
       .then((response) => {
         userStore.$patch({
           isLoggedIn: true,
+          isAdmin: response.data.role === "Admin",
           User: {
             username: response.data.username,
             id: response.data.userId,

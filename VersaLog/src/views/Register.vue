@@ -60,7 +60,6 @@ export default {
           import.meta.env.VITE_BACKEND_URL + "Auth/register/",
           this.$data,
         );
-        console.log("User registration response:", response.data);
         this.$refs.form.reset();
         alert("Registration successful");
         this.$router.push("/");

@@ -90,7 +90,7 @@ export default {
               :key="exercise.id"
               style="margin: 5px"
             >
-              <v-card style="min-width: 30px; min-height: 30px">
+              <v-card style="min-width: 5rem; min-height: 5rem">
                 <v-card-title v-bind="props"
                   >{{ exercise.exercise.name }}
                   <v-tooltip activator="parent" location="top"
@@ -184,7 +184,7 @@ export default {
   background-color: #ddd;
 }
 .v-text-field {
-  min-width: 100px;
+  min-width: 5rem;
 }
 
 .v-card {

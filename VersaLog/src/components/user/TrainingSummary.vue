@@ -64,7 +64,7 @@ export default {
       <template v-slot:activator="{ props }">
         <v-text-field
           v-bind="props"
-          label="Date"
+          label="Start date"
           type="date"
           v-model="dateStart"
         />
@@ -74,7 +74,7 @@ export default {
       <template v-slot:activator="{ props }">
         <v-text-field
           v-bind="props"
-          label="Date"
+          label="End date"
           type="date"
           v-model="dateEnd"
         />
@@ -86,13 +86,13 @@ export default {
       text="Select trainings containing specific exercise type"
     >
       <template v-slot:activator="{ props }">
-        <v-select
+        <v-autocomplete
           v-bind="props"
           v-model="type"
           :items="this.exerciseTypes"
           label="Exercise Type"
           style="min-width: 10rem"
-        ></v-select
+        ></v-autocomplete
       ></template>
     </v-tooltip>
     <v-btn color="success" @click="fetchData">Submit</v-btn>

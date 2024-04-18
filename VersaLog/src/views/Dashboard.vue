@@ -1,15 +1,48 @@
 <script setup lang="ts">
-import TrainingHistory from "@/components/TrainingHistory.vue";
-import AddTraining from "@/components/AddTraining.vue";
+import TrainingHistory from "@/components/user/TrainingHistory.vue";
+import AddTraining from "@/components/user/AddTraining.vue";
+import { useUserStore } from "@/stores/user";
+import AddTrainingAdmin from "@/components/admin/AddTrainingAdmin.vue";
+import TrainingHistoryAdmin from "@/components/admin/TrainingHistoryAdmin.vue";
+import AdminUserSelect from "@/components/admin/AdminUserSelect.vue";
+import { useSelectedUserStore } from "@/stores/selectedUser";
+const userStore = useUserStore();
+const selectedUserStore = useSelectedUserStore();
 </script>
-<script lang="ts"></script>
+<script lang="ts">
+import { useSelectedUserStore } from "@/stores/selectedUser";
+
+export default {
+  methods: {
+    receiveUser(user) {
+      const selectedUserStore = useSelectedUserStore();
+      selectedUserStore.$patch({ User: user });
+    },
+  },
+};
+</script>
 
 <template class="flex-column">
   <h1>DASHBOARD</h1>
-  <v-divider class="separator"></v-divider>
-  <TrainingHistory></TrainingHistory>
-  <v-divider class="separator"></v-divider>
-  <AddTraining></AddTraining>
+  <v-container>
+    <AdminUserSelect
+      v-if="userStore.$state.isAdmin"
+      v-on:userSelected="receiveUser"
+    ></AdminUserSelect>
+    <v-divider class="separator"></v-divider>
+    <TrainingHistory v-if="!userStore.$state.isAdmin"></TrainingHistory>
+    <TrainingHistoryAdmin
+      v-if="userStore.$state.isAdmin"
+      :selected-user="selectedUserStore.User"
+    >
+    </TrainingHistoryAdmin>
+    <v-divider class="separator"></v-divider>
+    <AddTraining v-if="!userStore.$state.isAdmin"></AddTraining>
+    <AddTrainingAdmin
+      v-if="userStore.$state.isAdmin"
+      :selected-user="selectedUserStore.User"
+    ></AddTrainingAdmin>
+  </v-container>
 </template>
 
 <style scoped>
