@@ -1,104 +1,127 @@
-#UseCaseDiagrams
-@startuml Registration
-(Enter register page) as enter
-(Fill form data) as form
-(Submit form) as submit
-(Pass DTO) as pass
-(Validate data) as validate
-(Register user) as register
-(Send response) as response
-(Redirect with response) as redirect
+# ----------------- UseCaseDiagram -----------------
+@startuml 
+:User:
+:NotLoggedUser:
+:Admin:
+:LoggedUser:
+:NormalUser:
 
-User -> enter
-enter -> form
-form -> submit
-submit -> Client
-Client --> pass
-pass --> Server
-Server -left-> validate
-validate -left-> register
-register -left-> response
-response --> Client
-Client --> redirect
-redirect --> User
+(Log in) as login
+(Register) as register
+(Enter main page) as mainpage
+(Add training) as add
+(Edit training) as edit
+(Display summary) as summary
+(List users)  as list
+(Select user) as select
+(Enter profile) as profile
+(Delete account) as delete
+(Log out) as logout
 
-@enduml
+NotLoggedUser -- login
+NotLoggedUser -- register
+NotLoggedUser -left-> mainpage
 
-@startuml Login
-(Enter login page) as enter
-(Fill login and password) as form
-(Submit form) as submit
-(Pass DTO) as pass
-(Validate data) as validate
-(Check user existing) as check_existing
-(Generate JWT) as generate
-(Send response) as response
-(Handle response) as handle_response
+NormalUser -- add
+NormalUser -- edit
+NormalUser -- summary
 
-User -> enter
-enter -> form
-form -> submit
-submit -> Client
-Client --> pass
-pass --> Server
-Server -left-> validate
-validate -left-> check_existing
-check_existing -> generate
-generate -> response
-response --> Client
-Client --> handle_response
-handle_response --> User
+Admin -left- list
+Admin -down- select
+
+select -- add : <<include>>
+select -- edit : <<include>>
+select -- summary : <<include>>
+
+
+LoggedUser - profile
+profile -down- delete : <<include>>
+LoggedUser -up- logout
+
+User -> LoggedUser
+User -left-> NotLoggedUser
+LoggedUser -> NormalUser
+LoggedUser ---> Admin
+
 
 @enduml
-
-#ClassDiagrams
+# ----------------- ClassDiagrams -----------------
 @startuml ServerClassDiagram
+skinparam classAttributeIconSize 0
 class AuthController {
-  + Register(UserDto request) : User
-  + Login(UserDto request) : User
+  - _context : VersaDbContext 
+  - _configuration : IConfiguration 
+  - string _keyToken  
+  + async Register(UserDto request) : Task<ActionResult<User>>
+  + async Login(UserDto request) : Task<ActionResult<User>>
+  + ValidateToken(string token, int userId) : ActionResult<User>
+  - CreateToken(User user) : string
 }
 
 class ExerciseController {
-  + GetAll() : List<Exercise>
-  + GetById(id : int) : Exercise?
-  + AddExercise(request : Exercise) : Exercise
-  + EditExercise(request : Exercise) : ActionResult
-  + DeleteExercise(exerciseId : int) : ActionResult
+  - _context : VersaDbContext
+  + async GetAll() : Task<ActionResult<List<Exercise>>>
+  + GetById(id : int) : ActionResult<Exercise>
+  + async AddExercise(request : Exercise) : Task<ActionResult<Exercise>>
+  + async EditExercise(request : Exercise) : Task<ActionResult>
+  + async DeleteExercise(exerciseId : int) : Task<ActionResult>
 }
 
 class TrainingController {
-  + GetAll() : List<Training>
-  + GetById(id : int) : Training?
-  + GetAllByUser(userId : int) : List<Training>
-  + GetByUserAndId(userId : int, trainingId : int) : Training
-  + AddTraining(request : TrainingDto) : ActionResult<Training>
-  + EditTraining(id : int, trainingDto : TrainingDto) : IActionResult
-  + DeleteTraining(trainingId : int) : ActionResult
+  - _context : VersaDbContext
+  + GetAll() : Task<ActionResult<List<Training>>>
+  + GetById(id : int) : ActionResult<TrainingDto>
+  + GetAllByUser(userId : int) : ActionResult<List<TrainingDto>>
+  + GetAllByUserTypeAndDate(userId : int, type : ExerciseType,dateStart : DateTime?,  dateEnd : DateTime?) : ActionResult<List<TrainingDto>>
+  + GetByUserAndId(userId : int, trainingId : int) : ActionResult<TrainingDto>
+  + AddTraining(request : TrainingDto) : Task<ActionResult<Training>>
+  + EditTraining(id : int, trainingDto : TrainingDto) : Task<ActionResult>
+  + DeleteTraining(trainingId : int) : Task<ActionResult>
 }
 
 class UserController {
-  + GetAll() : ActionResult<User>
-  + GetById(id : int) : ActionResult<User>
-  + DeleteUser(id : int) : ActionResult
+  - _context : VersaDbContext
+  + async GetAll() : Task<ActionResult<List<User>>>
+  + async GetById(id : int) : ActionResult<User>
+  + async DeleteUser(id : int) : Task<ActionResult>
 }
 
 class UserDto {
-  - Id : int
-  - FirstName : string
-  - LastName : string
-  - Username : string
-  - Password : string
-  - Email : string
-  - Token : string
+  + Id : int
+  + FirstName : string
+  + LastName : string
+  + Username : string
+  + Password : string
+  + Email : string
+  + Token : string
+  + Role : string
 }
 
 class TrainingDto {
-  - TrainingId : int
-  - DateAssigned : DateTime
-  - Status : Status
-  - Exercises : ICollection<Exercise>
-  - Results : ICollection<string>
-  - UserId : int
+  + TrainingId : int
+  + DateAssigned : DateTime
+  + Status : Status
+  + ExerciseResults : List<Exercise>
+  + UserId : int
+}
+
+class ExerciseResult{
+    + ExerciseResultId : int
+    + Exercise Exercise : Exercise
+    + ExerciseId : int
+    + Result : string
+    + Sets : int
+    + Reps : int
+    + virtual Training : Training
+    + TrainingId : int
+}
+
+class ExerciseResultDto{
+    + ExerciseResultId : int
+    + Exercise : Exercise
+    + Result : string
+    + Sets : int
+    + Reps : int
 }
 
 class UserBuilder {
@@ -108,6 +131,33 @@ class UserBuilder {
 class UserValidation {
   + ValidateEmail(email : string) : bool
   + ValidatePassword(password : string) : bool
+}
+
+class Exercise {
+  + ExerciseId : int
+  + Name : string
+  + Description : string
+  + Type : ExerciseType
+}
+
+class Training {
+  + TrainingId : int
+  + DateAssigned : DateTime
+  + Status : Status
+  + ExerciseResults : List<ExerciseResult>
+  + User : User
+  + UserId : int
+}
+
+class User {
+  + UserId : int
+  + FirstName : string
+  + LastName : string
+  + Username : string
+  + PasswordHash : string
+  + Email : string
+  + Trainings : List<Training>
+  + Role : Role
 }
 
 enum ExerciseType {
@@ -128,49 +178,133 @@ enum Status {
   Outdated
 }
 
-User "1" -- "many" Training : ma
-Training "many" -- "many" Exercise : zawiera
-
-AuthController -- "1" User
-ExerciseController -- "1" Exercise
-TrainingController -- "1" Training
-UserController -- "1" User
-
-class Exercise {
-  - ExerciseId : int
-  - Name : string
-  - Description : string
-  - Type : ExerciseType
+enum Role{
+    User
+    Admin
 }
 
-class Training {
-  - TrainingId : int
-  - DateAssigned : DateTime
-  - Status : Status
-  - Exercises : List<Exercise>
-  - Results : List<string>
-  - User : User
-  - UserId : int
-}
+UserBuilder -up- User
 
-class User {
-  - UserId : int
-  - FirstName : string
-  - LastName : string
-  - Username : string
-  - PasswordHash : string
-  - Email : string
-  - Trainings : List<Training>
-}
+AuthController -- UserDto
+
+UserValidation -up- UserBuilder
+
+TrainingDto -up- TrainingController : <<consumes>> : <<returns>> 
+
+Status ||-|| Training : <<has>>
+
+ExerciseType  ||--|| Exercise : <<has>>
+
+User ||--left-|{ Training : <<has>>
+User ||-|| Role : <<has>>
+Training ||--|{ ExerciseResult : <<has>>
+ExerciseResult }o--|| Exercise : <<has>>
+
+AuthController -left- User : <<returns>>
+ExerciseController -- Exercise : <<returns>>
+TrainingController -- Training : <<returns>>
+TrainingDto -down- ExerciseResultDto : <<uses>>
+UserController -- User : <<returns>>
+
 
 
 @enduml
 
 
-@startuml ClientClassDiagram
+# ----------------- ComponentDiagram -----------------
+
+@startuml
+
+package Server{
+    package Controllers{
+        component AuthController <<component>>
+        component TrainingController <<component>>
+        component UserController <<component>>
+        component ExerciseController <<component>>
+    }
+    package Models{
+        component User <<component>>
+        component Training <<component>>
+        component Exercise <<component>>
+    }
+    component DbContext <<component>>
+}
+
+package Client{
+node Router
+node App
+}
+
+interface interface as int1
+interface interface as int2
+interface interface as int3
+interface interface as int4
+
+Router -left-( interface
+interface -up- AuthController
+App --( int1
+int1 -- AuthController
+
+App --( int2
+int2 -- TrainingController
+
+App --( int3
+int3 -- UserController
+
+App --( int4
+int4 -- ExerciseController
+
+
+
+node Database{
+}
+
+Database -- DbContext : Entity Framework
+
 @enduml
 
-#SequenceDiagrams
+
+# ----------------- DeploymentDiagram -----------------
+
+@startuml
+node cloud <<device>>{
+node DBServer <<device>>{
+ database postgresql <<artifact>>{
+ rectangle Exercises <<schema>>{
+ } 
+ rectangle ExerciseTraining <<schema>>{
+ }
+ rectangle Trainings <<schema>>{
+ }
+ rectangle Users <<schema>>{
+ }
+ }
+}
+}
+
+server ---- cloud : TCP/IP <<protocol>>
+
+node server <<device>>{
+node .NET <<environment>>{
+    node WebServer <<artifact>>
+
+    component appsettings.json <<artifact>>
+    component Program.cs <<artifact>>
+    component VersaDbContext.cs <<artifact>>
+}
+}
+
+server -- client : HTTPS <<protocol>>
+
+node client <<device>>{
+component WebBrowser{
+node App.vue <<artifact>>
+}
+}
+ 
+@enduml
+
+# ----------------- SequenceDiagrams -----------------
 @startuml AuthRegistration
 
 Actor User as user
@@ -242,4 +376,151 @@ else
     app -> user : Response displayed, user not authorized [401]
 end
 @enduml
-#ActivityDiagrams
+
+# ----------------- ActivityDiagrams -----------------
+
+@startuml AddTraining
+start
+partition client{
+:Form reached;
+repeat
+:Select exercise;
+if (Exercise exists?) then (yes)
+    :Create ExerciseResult;
+    :Add exercise to ExerciseResult;
+else (no)
+    :Add Exercise;
+    note right: Ref AddExercise diagram
+    :Create ExerciseResult;
+    :Add ExerciseResult to list;
+endif
+repeat while (More exercises?) is (yes)
+:Add date;
+:Save training to server;
+}
+partition server{
+    :Find user;
+    if (User exists?) then (yes)
+    :Create training from DTO;
+    while (For ExerciseResultsDto in TrainingDto)
+        :Find exercise;
+        if (Exercise exists?) then (yes)
+            :Create ExerciseResult object;
+            :Assign values from DTO;
+        else (no)
+            #pink:Return error;
+            stop
+        endif
+    endwhile (Done)
+    else
+        #pink:Return error;
+        stop
+    endif
+    :Assign found exercises to ExerciseResult;
+    :Save training to database;
+    :Return training;
+}
+stop
+@enduml
+
+@startuml AddTrainingAdmin
+start
+partition client{
+:Form reached;
+:Select user;
+repeat
+:Select exercise;
+if (Exercise exists?) then (yes)
+    :Create ExerciseResult;
+    :Add exercise to ExerciseResult;
+else (no)
+    :Add Exercise;
+    note right: Ref AddExercise diagram
+    :Create ExerciseResult;
+    :Add ExerciseResult to list;
+endif
+repeat while (More exercises?) is (yes)
+:Add date;
+:Save training to server;
+}
+partition server{
+    :Find user;
+    if (User exists?) then (yes)
+    :Create training from DTO;
+    while (For ExerciseResultsDto in TrainingDto)
+        :Find exercise;
+        if (Exercise exists?) then (yes)
+            :Create ExerciseResult object;
+            :Assign values from DTO;
+        else (no)
+            #pink:Return error;
+            stop
+        endif
+    endwhile (Done)
+    else
+        #pink:Return error;
+        stop
+    endif
+    :Assign found exercises to ExerciseResult;
+    :Save training to database;
+    :Return training;
+}
+stop
+@enduml
+
+
+@startuml EditTraining
+start
+partition client{
+    :Select training to edit;
+    :Click Edit;
+    :Edit available ExerciseResults;
+    if (ExerciseResult deleted?) then (no)
+        :Edit existing ExerciseResult;
+    else (yes)
+        :Remove ExerciseResult from available;
+    endif
+    
+    :Save training to server;
+}
+partition server{
+    :Find training;
+    if (Training exists?) then (yes)
+        :Extract data from DTO;
+        :Iterate ExerciseResults;
+        if (ExerciseResult exists?) then (no)
+            :Remove ExerciseResult;
+        else
+            :Assign from DTO to ExerciseResult;
+        endif
+    else
+        #pink:Return error;
+        stop
+    endif
+    :Return edited Training;
+}
+stop
+@enduml
+
+@startuml AddExercise
+start
+partition client{
+    :Fill form;
+    :Save Exercise to server;
+}
+partition server{
+    :Find exercise;
+    if (Exercise exists?) then (no)
+        :Create new exercise;
+        :Assign data from DTO;
+        :Save training to database;
+        :Return new Exercise to server;
+    else (yes)
+        #pink:Return error;
+        stop
+    endif
+}
+stop
+@enduml
+
+
