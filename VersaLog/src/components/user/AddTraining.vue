@@ -189,14 +189,9 @@ export default {
         })
         .then((response) => {
           this.exercises.push(response.data);
-          let exercise = {
-            name: this.newExerciseName,
-            type: this.newExerciseType,
-            description: this.newExerciseDescription,
-          };
           this.showNewExerciseModal = false;
           let exerciseResult = {
-            exercise: exercise,
+            exercise: response.data,
             reps: 0,
             sets: 0,
             result: "",
