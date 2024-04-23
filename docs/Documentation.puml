@@ -1,6 +1,5 @@
 # ----------------- UseCaseDiagram -----------------
 @startuml 
-:User:
 :NotLoggedUser:
 :Admin:
 :LoggedUser:
@@ -20,7 +19,7 @@
 
 NotLoggedUser -- login
 NotLoggedUser -- register
-NotLoggedUser -left-> mainpage
+NotLoggedUser -left- mainpage
 
 NormalUser -- add
 NormalUser -- edit
@@ -38,10 +37,8 @@ LoggedUser - profile
 profile -down- delete : <<include>>
 LoggedUser -up- logout
 
-User -> LoggedUser
-User -left-> NotLoggedUser
-LoggedUser -> NormalUser
-LoggedUser ---> Admin
+LoggedUser <|--- NormalUser
+LoggedUser <|- Admin
 
 
 @enduml
@@ -191,14 +188,14 @@ UserValidation -up- UserBuilder
 
 TrainingDto -up- TrainingController : <<consumes>> : <<returns>> 
 
-Status ||-|| Training : <<has>>
+Status  "1" - "1" Training : <<has>>
 
-ExerciseType  ||--|| Exercise : <<has>>
+ExerciseType  "1"--"1" Exercise : <<has>>
 
-User ||--left-|{ Training : <<has>>
-User ||-|| Role : <<has>>
-Training ||--|{ ExerciseResult : <<has>>
-ExerciseResult }o--|| Exercise : <<has>>
+User "1"--left- "0..*" Training : <<has>>
+User "1"-"1" Role : <<has>>
+Training "1"--"1..*" ExerciseResult : <<has>>
+ExerciseResult "0..*"--"1" Exercise : <<has>>
 
 AuthController -left- User : <<returns>>
 ExerciseController -- Exercise : <<returns>>
@@ -222,10 +219,11 @@ package Server{
         component UserController <<component>>
         component ExerciseController <<component>>
     }
-    package Models{
+    component Models{
         component User <<component>>
-        component Training <<component>>
-        component Exercise <<component>>
+        rectangle Training <<model>>
+        rectangle ExerciseResult <<model>>
+        rectangle Exercise <<model>>
     }
     component DbContext <<component>>
 }
@@ -235,13 +233,14 @@ node Router
 node App
 }
 
-interface interface as int1
-interface interface as int2
-interface interface as int3
-interface interface as int4
+interface RestAPI as int1
+interface RestAPI as int2
+interface RestAPI as int3
+interface RestAPI as int4
+interface RestAPI as int5
 
-Router -left-( interface
-interface -up- AuthController
+Router -left-( int5
+int5 -up- AuthController
 App --( int1
 int1 -- AuthController
 
@@ -306,7 +305,7 @@ node App.vue <<artifact>>
 
 # ----------------- SequenceDiagrams -----------------
 @startuml AuthRegistration
-
+hide footbox
 Actor User as user
 Participant Client as app
 Participant Server as server
@@ -357,6 +356,7 @@ end
 @enduml
 
 @startuml AuthTokenValidity
+hide footbox
 Actor User as user
 Participant Client as app
 Participant Server as server
@@ -389,7 +389,7 @@ if (Exercise exists?) then (yes)
     :Create ExerciseResult;
     :Add exercise to ExerciseResult;
 else (no)
-    :Add Exercise;
+    :**Add Exercise**;
     note right: Ref AddExercise diagram
     :Create ExerciseResult;
     :Add ExerciseResult to list;
@@ -434,7 +434,7 @@ if (Exercise exists?) then (yes)
     :Create ExerciseResult;
     :Add exercise to ExerciseResult;
 else (no)
-    :Add Exercise;
+    :**Add Exercise**;
     note right: Ref AddExercise diagram
     :Create ExerciseResult;
     :Add ExerciseResult to list;
@@ -523,4 +523,6 @@ partition server{
 stop
 @enduml
 
+@startuml Summary
 
+@enduml

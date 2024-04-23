@@ -5,6 +5,7 @@ import Training from "@/components/Training.vue";
 <script lang="ts">
 import { useUserStore } from "@/stores/user";
 import axios from "axios";
+import {toast} from "vue-sonner";
 
 export default {
   data() {
@@ -20,7 +21,7 @@ export default {
       );
     },
     showMore() {
-      const additionalCount = 5;
+      const additionalCount = 3;
       this.visibleTrainings.push(
         ...this.trainings.slice(
           this.visibleTrainings.length,
@@ -45,9 +46,9 @@ export default {
           return new Date(b.dateAssigned) - new Date(a.dateAssigned);
         });
       } catch (error) {
-        alert("Something wrong " + error.response.data);
+        toast.error("Something wrong " + error.response.data);
       }
-      this.visibleTrainings = this.trainings.slice(0, 5);
+      this.visibleTrainings = this.trainings.slice(0, 3);
     },
   },
 
@@ -62,13 +63,13 @@ export default {
   <v-list v-for="training in visibleTrainings" :key="training.id">
     <Training :training-data="training" v-on:forceUpdate="fetchData" />
   </v-list>
-  <button v-if="trainings.length > visibleTrainings.length" @click="showMore">
+  <v-btn v-if="trainings.length > visibleTrainings.length" @click="showMore">
     Show More
-  </button>
+  </v-btn>
 </template>
 
 <style scoped>
 * {
-  max-width: 50vw;
+  max-width: 70vw;
 }
 </style>

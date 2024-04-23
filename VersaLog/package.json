@@ -12,12 +12,15 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@date-io/date-fns": "^3.0.0",
     "@mdi/font": "^7.4.47",
+    "@vueuse/core": "^10.9.0",
     "axios": "^1.6.7",
     "pinia": "^2.1.7",
     "tailwind": "^4.0.0",
     "vue": "^3.3.11",
     "vue-router": "^4.3.0",
+    "vue-sonner": "^1.1.2",
     "vuetify": "^3.5.8"
   },
   "devDependencies": {

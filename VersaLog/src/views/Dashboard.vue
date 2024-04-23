@@ -6,6 +6,7 @@ import AddTrainingAdmin from "@/components/admin/AddTrainingAdmin.vue";
 import TrainingHistoryAdmin from "@/components/admin/TrainingHistoryAdmin.vue";
 import AdminUserSelect from "@/components/admin/AdminUserSelect.vue";
 import { useSelectedUserStore } from "@/stores/selectedUser";
+import TodayTraining from "@/components/user/TodayTraining.vue";
 const userStore = useUserStore();
 const selectedUserStore = useSelectedUserStore();
 </script>
@@ -29,6 +30,7 @@ export default {
       v-if="userStore.$state.isAdmin"
       v-on:userSelected="receiveUser"
     ></AdminUserSelect>
+    <TodayTraining></TodayTraining>
     <v-divider class="separator"></v-divider>
     <TrainingHistory v-if="!userStore.$state.isAdmin"></TrainingHistory>
     <TrainingHistoryAdmin

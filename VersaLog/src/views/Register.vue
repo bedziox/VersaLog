@@ -43,6 +43,7 @@
 </template>
 <script lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 export default {
   data() {
     return {
@@ -61,10 +62,10 @@ export default {
           this.$data,
         );
         this.$refs.form.reset();
-        alert("Registration successful");
+        toast.success("Registration successful");
         this.$router.push("/");
       } catch (error) {
-        alert("Registration unsuccessful: " + error.response.data);
+        toast.error("Registration unsuccessful: " + error.response.data);
       }
     },
   },

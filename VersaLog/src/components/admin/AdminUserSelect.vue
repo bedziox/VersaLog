@@ -19,7 +19,7 @@ export default {
         this.userList = response.data;
       })
       .catch((error) => {
-        alert("There was a problem during exercises retrieval");
+        toast.error("There was a problem during exercises retrieval");
       });
   },
   methods: {

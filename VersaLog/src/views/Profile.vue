@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user.js";
+import { toast } from "vue-sonner";
 const userStore = useUserStore();
 </script>
 
@@ -15,12 +16,12 @@ export default {
             import.meta.env.VITE_BACKEND_URL + `User?id=${userStore.getId}`,
           )
           .then((response) => {
-            alert("Account deleted successfully");
+            toast.success("Account deleted successfully");
             userStore.$reset();
             this.$router.push("/");
           })
           .catch((error) => {
-            alert("There was a problem during account deletion");
+            toast.error("There was a problem during account deletion");
           });
       }
     },

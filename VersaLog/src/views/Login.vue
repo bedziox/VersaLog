@@ -31,6 +31,7 @@
 import axios from "axios";
 import { useUserStore } from "@/stores/user.js";
 import { onMounted } from "vue";
+import { toast } from "vue-sonner";
 async function loadExercises() {
   try {
     const userStore = useUserStore();
@@ -46,7 +47,7 @@ async function loadExercises() {
       Trainings: response.data,
     });
   } catch (error) {
-    alert("Something wrong " + error.response.data);
+    toast.error("Something wrong " + error.response.data);
   }
 }
 export default {
@@ -68,7 +69,7 @@ export default {
           this.$data,
         );
         this.$refs.form.reset();
-        alert("Login successful");
+        toast.success("Login successful");
         localStorage.setItem("jwtToken", response.data.token);
         userStore.$patch({
           isLoggedIn: true,
@@ -86,7 +87,7 @@ export default {
           this.$router.push("/dashboard");
         }
       } catch (error) {
-        alert("Login unsuccessful: " + error.response.data);
+        toast.error("Login unsuccessful: " + error.response.data);
       }
     },
   },

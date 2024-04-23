@@ -4,6 +4,7 @@ import TrainingCompact from "@/components/TrainingCompact.vue";
 <script lang="ts">
 import { useUserStore } from "@/stores/user";
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 export default {
   data() {
@@ -24,7 +25,7 @@ export default {
     };
   },
   methods: {
-    async fetchData() {
+    fetchData: async function () {
       try {
         const userStore = useUserStore();
         const response = await axios.get(
@@ -44,7 +45,7 @@ export default {
         });
         this.$emit("trainingFetch");
       } catch (error) {
-        alert("Something wrong " + error.response.data);
+        toast.error("Something wrong " + error.response.data);
       }
     },
   },

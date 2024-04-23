@@ -3,6 +3,7 @@ import { defineComponent } from "vue";
 import Training from "@/components/Training.vue";
 import { useUserStore } from "@/stores/user";
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 export default {
   name: "TrainingHistoryAdmin",
@@ -44,7 +45,7 @@ export default {
           return new Date(b.dateAssigned) - new Date(a.dateAssigned);
         });
       } catch (error) {
-        alert("Something wrong " + error.response.data);
+        toast.error("Something wrong " + error.response.data);
       }
       this.visibleTrainings = this.trainings.slice(0, 5);
     },

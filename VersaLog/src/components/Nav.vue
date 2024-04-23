@@ -1,20 +1,32 @@
 <script setup lang="ts">
 import { useTheme } from "vuetify";
-import { useUserStore } from "@/stores/user";
-
 const theme = useTheme();
-const userStore = useUserStore();
 
 function toggleTheme() {
   theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
 }
-function logout() {
-  localStorage.removeItem("jwtToken");
-  localStorage.removeItem("id");
-  userStore.$reset();
-  alert("Logged out successfully");
-  window.location.href = "/";
-}
+</script>
+
+<script lang="ts">
+import { toast } from "vue-sonner";
+import { useUserStore } from "@/stores/user";
+
+export default {
+  data(vm) {
+    return {
+      userStore: useUserStore(),
+    };
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem("jwtToken");
+      localStorage.removeItem("id");
+      this.userStore.$reset();
+      toast.success("Logged out successfully");
+      this.$router.push("/");
+    },
+  },
+};
 </script>
 
 <template>

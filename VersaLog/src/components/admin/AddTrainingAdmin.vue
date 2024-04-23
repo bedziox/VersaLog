@@ -1,6 +1,7 @@
 <script lang="ts">
 import axios from "axios";
 import { useUserStore } from "@/stores/user";
+import { toast } from "vue-sonner";
 
 export default {
   name: "AddTrainingAdmin",
@@ -75,12 +76,11 @@ export default {
         axios
           .post(import.meta.env.VITE_BACKEND_URL + "Training", this.newTraining)
           .then((response) => {
-            alert("Training added successfully");
+            toast.success("Training added successfully");
             this.$emit("forceUpdate");
           });
       } catch (error) {
-        alert("There was a problem creating the training.");
-        console.error(error);
+        toast.error("There was a problem creating the training.");
       }
     },
     createExercise() {
@@ -105,10 +105,10 @@ export default {
             result: "",
           };
           this.newTraining.exerciseResults.push(exerciseResult);
-          alert("New exercise added");
+          toast.success("New exercise added");
         })
         .catch((error) => {
-          alert("There was a problem creating the exercise.");
+          toast.error("There was a problem creating the exercise.");
           console.error(error);
         });
     },
@@ -127,7 +127,7 @@ export default {
         this.exercises = response.data;
       })
       .catch((error) => {
-        alert("There was a problem during exercises retrieval");
+        toast.error("There was a problem during exercises retrieval");
       });
   },
   watch: {

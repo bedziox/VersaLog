@@ -1,7 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { formatDate } from "@vueuse/core";
+</script>
 
 <script lang="ts">
 import axios from "axios";
+import { toast } from "vue-sonner";
 
 export default {
   props: {
@@ -26,11 +29,11 @@ export default {
           )
           .then((response) => {
             this.$emit("trainingDeleted", this.training.id);
-            alert("Training deleted successfully");
+            toast.success("Training deleted successfully");
             this.$emit("forceUpdate");
           })
           .catch((error) => {
-            alert("There was a problem during training deletion");
+            toast.error("There was a problem during training deletion");
           });
       }
     },
@@ -47,10 +50,10 @@ export default {
         .then((response) => {
           this.$emit("trainingUpdated", this.training);
           this.isEditing = false;
-          alert("Training saved successfully");
+          toast.success("Training saved successfully");
         })
         .catch((error) => {
-          alert("There was a problem during training saving");
+          toast.error("There was a problem during training saving");
         });
     },
     removeExercise(exerciseResult) {
@@ -59,6 +62,25 @@ export default {
       );
       if (index > -1) {
         this.training.exerciseResults.splice(index, 1);
+      }
+    },
+    iconPicker(status) {
+      switch (status) {
+        case "New": {
+          return "mdi-information-outline";
+        }
+        case "InProgress": {
+          return "mdi-progress-check";
+        }
+        case "Done": {
+          return "mdi-check";
+        }
+        case "Cancelled": {
+          return "mdi-cancel";
+        }
+        case "Outdated": {
+          return "mdi-calendar-lock";
+        }
       }
     },
   },
@@ -72,16 +94,16 @@ export default {
         <v-col cols="6">
           <span
             ><b>Date assigned:</b>
-            {{
-              new Date(this.training.dateAssigned)
-                .toISOString()
-                .substring(0, 10)
-            }}</span
+            {{ formatDate(new Date(this.training.dateAssigned), "DD-MM-YYYY") }}
+            <v-icon>mdi-calendar</v-icon></span
           >
         </v-col>
         <v-col cols="6">
           <span class="status"><b>Status: </b> </span>
-          <span class="status">{{ this.training.status }}</span>
+          <span class="status"
+            >{{ this.training.status }}
+            <v-icon>{{ iconPicker(this.training.status) }}</v-icon></span
+          >
         </v-col>
         <v-col cols="12" class="exercises-and-results">
           <template v-if="this.training.exerciseResults.length">
@@ -90,7 +112,7 @@ export default {
               :key="exercise.id"
               style="margin: 5px"
             >
-              <v-card style="min-width: 5rem; min-height: 5rem">
+              <v-card style="min-width: 5rem; min-height: 5rem; height: 10rem">
                 <v-card-title v-bind="props"
                   >{{ exercise.exercise.name }}
                   <v-tooltip activator="parent" location="top"
@@ -98,9 +120,10 @@ export default {
                   </v-tooltip></v-card-title
                 >
                 <v-card-subtitle>{{ exercise.exercise.type }}</v-card-subtitle>
-                <v-card-text>Sets: {{ exercise.sets }}</v-card-text>
-                <v-card-text>Reps: {{ exercise.reps }}</v-card-text>
-                <v-card-text>Result: {{ exercise.result }}</v-card-text>
+                <v-card-text
+                  >{{ exercise.sets }} / {{ exercise.reps }}</v-card-text
+                >
+                <v-card-text>{{ exercise.result }}</v-card-text>
               </v-card>
             </v-list>
           </template>
@@ -149,7 +172,7 @@ export default {
         </v-col>
         <v-col>
           <span>Notes:</span>
-          <v-text-field v-model:="this.training.note"> </v-text-field>
+          <v-text-field v-model="this.training.note"> </v-text-field>
         </v-col>
       </v-row>
     </v-card-text>

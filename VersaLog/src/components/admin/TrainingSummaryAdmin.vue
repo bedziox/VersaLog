@@ -5,6 +5,7 @@ import axios from "axios";
 import TrainingCompact from "@/components/TrainingCompact.vue";
 import AdminUserSelect from "@/components/admin/AdminUserSelect.vue";
 import { useSelectedUserStore } from "@/stores/selectedUser";
+import { toast } from "vue-sonner";
 
 export default defineComponent({
   name: "TrainingSummaryAdmin",
@@ -48,14 +49,14 @@ export default defineComponent({
         });
         this.$emit("trainingFetch");
       } catch (error) {
-        alert("Something wrong " + error.response.data);
+        toast.error("Something wrong " + error.response.data);
       }
     },
     fetchGuard(user) {
       if (user !== null) {
         this.fetchData(user.userId);
       } else {
-        alert("User is not selected");
+        toast.error("User is not selected");
       }
     },
     receiveUser(user) {

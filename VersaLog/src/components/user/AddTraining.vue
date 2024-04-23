@@ -8,6 +8,7 @@
         v-model="newTraining.dateAssigned"
         label="Training Date"
         type="date"
+        hint="MM-DD-YYYY"
       ></v-text-field>
       <v-autocomplete
         style="min-width: 20rem"
@@ -104,6 +105,7 @@
 <script lang="ts">
 import axios from "axios";
 import { useUserStore } from "@/stores/user";
+import { toast } from "vue-sonner";
 
 export default {
   data() {
@@ -172,11 +174,11 @@ export default {
         axios
           .post(import.meta.env.VITE_BACKEND_URL + "Training", this.newTraining)
           .then((response) => {
-            alert("Training added successfully");
+            toast.success("Training added successfully");
             this.$emit("forceUpdate");
           });
       } catch (error) {
-        alert("There was a problem creating the training.");
+        toast.error("There was a problem creating the training.");
         console.error(error);
       }
     },
@@ -197,11 +199,10 @@ export default {
             result: "",
           };
           this.newTraining.exerciseResults.push(exerciseResult);
-          alert("New exercise added");
+          toast.success("New exercise added");
         })
         .catch((error) => {
-          alert("There was a problem creating the exercise.");
-          console.error(error);
+          toast.error("There was a problem creating the exercise.");
         });
     },
     itemProps(item) {
@@ -219,7 +220,7 @@ export default {
         this.exercises = response.data;
       })
       .catch((error) => {
-        alert("There was a problem during exercises retrieval");
+        toast.error("There was a problem during exercises retrieval");
       });
     const userStore = useUserStore();
     this.newTraining.userId = userStore.getId;

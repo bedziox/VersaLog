@@ -1,8 +1,10 @@
 <script lang="ts">
 import { defineComponent } from "vue";
+import { formatDate } from "@vueuse/core";
 
 export default defineComponent({
   name: "TrainingCompact",
+  methods: { formatDate },
   props: {
     trainingData: Object,
   },
@@ -18,7 +20,9 @@ export default defineComponent({
   <v-card>
     <tr>
       <td>
-        <v-col>{{ this.training.dateAssigned.slice(0, 10) }}</v-col>
+        <v-col>{{
+          formatDate(new Date(this.training.dateAssigned), "DD-MM-YYYY")
+        }}</v-col>
       </td>
       <td v-for="exerciseResult in training.exerciseResults">
         <v-tooltip location="top">
@@ -27,9 +31,8 @@ export default defineComponent({
               exerciseResult.exercise.name
             }}</v-card-title>
             <v-card-item
-              >S:{{ exerciseResult.sets }} R:{{
-                exerciseResult.reps
-              }}</v-card-item
+              >{{ exerciseResult.sets }} /
+              {{ exerciseResult.reps }}</v-card-item
             >
           </template>
           <span>{{ exerciseResult.exercise.description }}</span>

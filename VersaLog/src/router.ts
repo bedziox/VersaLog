@@ -7,6 +7,7 @@ import Profile from "@/views/Profile.vue";
 import { useUserStore } from "@/stores/user";
 import axios from "axios";
 import Summary from "@/views/Summary.vue";
+import { toast } from "vue-sonner";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -64,7 +65,7 @@ router.beforeEach((to, from, next) => {
       .catch((error) => {
         localStorage.removeItem("jwtToken");
         router.push("/");
-        alert("Token not valid, please log in again.");
+        toast.warning("Token not valid, please log in again.");
         userStore.$reset();
       });
   }
