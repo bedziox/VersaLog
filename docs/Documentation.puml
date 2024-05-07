@@ -68,9 +68,9 @@ class TrainingController {
   - _context : VersaDbContext
   + GetAll() : Task<ActionResult<List<Training>>>
   + GetById(id : int) : ActionResult<TrainingDto>
-  + GetAllByUser(userId : int) : ActionResult<List<TrainingDto>>
-  + GetAllByUserTypeAndDate(userId : int, type : ExerciseType,dateStart : DateTime?,  dateEnd : DateTime?) : ActionResult<List<TrainingDto>>
-  + GetByUserAndId(userId : int, trainingId : int) : ActionResult<TrainingDto>
+  + GetByUser(userId : int) : ActionResult<List<TrainingDto>>
+  + GetByUserTypeAndDate(userId : int, type : ExerciseType,dateStart : DateTime?,  dateEnd : DateTime?) : ActionResult<List<TrainingDto>>
+  + GetByUserAndStatus(userId : int, status : Status) : ActionResult<List<TrainingDto>>
   + AddTraining(request : TrainingDto) : Task<ActionResult<Training>>
   + EditTraining(id : int, trainingDto : TrainingDto) : Task<ActionResult>
   + DeleteTraining(trainingId : int) : Task<ActionResult>
