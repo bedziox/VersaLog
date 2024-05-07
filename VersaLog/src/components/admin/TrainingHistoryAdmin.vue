@@ -16,6 +16,8 @@ export default {
       user: this.selectedUser,
       trainings: [],
       visibleTrainings: [],
+      status: null,
+      statuses: ["New", "InProgress", "Done", "Cancelled", "Outdated"],
     };
   },
   methods: {
@@ -30,13 +32,15 @@ export default {
     },
     async fetchData(userId) {
       try {
-        this.training = [];
         const userStore = useUserStore();
         const response = await axios.get(
-          import.meta.env.VITE_BACKEND_URL + "Training/user",
+          import.meta.env.VITE_BACKEND_URL +
+            "Training/user/" +
+            (this.status ? "status" : ""),
           {
             params: {
               userId: userId,
+              status: this.status,
             },
           },
         );
@@ -60,6 +64,17 @@ export default {
 
 <template>
   <h3>Training history</h3>
+  <v-select
+    v-model="this.status"
+    :items="this.statuses"
+    v-on:update:model-value="fetchData"
+  >
+    <template #prepend>
+      <v-btn icon @click="clearStatus">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </template>
+  </v-select>
   <v-list v-for="training in visibleTrainings" :key="training.id">
     <Training :training-data="training" v-on:forceUpdate="fetchData" />
   </v-list>

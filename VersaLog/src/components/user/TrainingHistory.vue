@@ -33,7 +33,6 @@ export default {
     },
     async fetchData() {
       try {
-        this.trainings = [];
         const userStore = useUserStore();
         const response = await axios.get(
           import.meta.env.VITE_BACKEND_URL +
@@ -57,6 +56,7 @@ export default {
     },
     clearStatus() {
       this.status = null;
+      this.trainings = [];
       this.fetchData();
     },
   },
