@@ -39,7 +39,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <h3>Today's training:</h3>
+  <h3>Today's trainings</h3>
   <v-card-title v-if="!this.trainings.length">
     No trainings assigned today!</v-card-title
   >

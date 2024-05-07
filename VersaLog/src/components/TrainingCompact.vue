@@ -4,7 +4,19 @@ import { formatDate } from "@vueuse/core";
 
 export default defineComponent({
   name: "TrainingCompact",
-  methods: { formatDate },
+  methods: {
+    formatDate,
+    getClassByStatus(status) {
+      const statusClasses = {
+        New: "border-new",
+        InProgress: "border-inprogress",
+        Done: "border-done",
+        Cancelled: "border-cancelled",
+        Outdated: "border-outdated",
+      };
+      return statusClasses[status] || "";
+    },
+  },
   props: {
     trainingData: Object,
   },
@@ -18,11 +30,12 @@ export default defineComponent({
 
 <template>
   <v-card>
-    <tr>
+    <tr :class="`${getClassByStatus(this.training.status)}`">
       <td>
         <v-col>{{
           formatDate(new Date(this.training.dateAssigned), "DD-MM-YYYY")
         }}</v-col>
+        <v-col>{{ this.training.status }} </v-col>
       </td>
       <td v-for="exerciseResult in training.exerciseResults">
         <v-tooltip location="top">
@@ -63,5 +76,31 @@ td {
 .v-card-item {
   display: flex;
   justify-content: space-around;
+}
+
+.border-new {
+  border: 2px dashed lightblue;
+  padding: 5px;
+  border-radius: 4px;
+}
+.border-inprogress {
+  border: 2px dashed blue;
+  padding: 5px;
+  border-radius: 4px;
+}
+.border-done {
+  border: 2px dashed #01ee01;
+  padding: 5px;
+  border-radius: 4px;
+}
+.border-cancelled {
+  border: 2px dashed red;
+  padding: 5px;
+  border-radius: 4px;
+}
+.border-outdated {
+  border: 2px dashed yellow;
+  padding: 5px;
+  border-radius: 4px;
 }
 </style>

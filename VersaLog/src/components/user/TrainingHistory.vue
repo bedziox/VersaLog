@@ -5,13 +5,15 @@ import Training from "@/components/Training.vue";
 <script lang="ts">
 import { useUserStore } from "@/stores/user";
 import axios from "axios";
-import {toast} from "vue-sonner";
+import { toast } from "vue-sonner";
 
 export default {
   data() {
     return {
       trainings: [],
       visibleTrainings: [],
+      status: null,
+      statuses: ["New", "InProgress", "Done", "Cancelled", "Outdated"],
     };
   },
   methods: {
@@ -31,13 +33,16 @@ export default {
     },
     async fetchData() {
       try {
-        this.training = [];
+        this.trainings = [];
         const userStore = useUserStore();
         const response = await axios.get(
-          import.meta.env.VITE_BACKEND_URL + "Training/user",
+          import.meta.env.VITE_BACKEND_URL +
+            "Training/user/" +
+            (this.status ? "status" : ""),
           {
             params: {
               userId: userStore.getId,
+              status: this.status,
             },
           },
         );
@@ -46,9 +51,13 @@ export default {
           return new Date(b.dateAssigned) - new Date(a.dateAssigned);
         });
       } catch (error) {
-        toast.error("Something wrong " + error.response.data);
+        toast.error("Something wrong with training receival");
       }
       this.visibleTrainings = this.trainings.slice(0, 3);
+    },
+    clearStatus() {
+      this.status = null;
+      this.fetchData();
     },
   },
 
@@ -60,6 +69,17 @@ export default {
 
 <template>
   <h3>Training history</h3>
+  <v-select
+    v-model="this.status"
+    :items="this.statuses"
+    v-on:update:model-value="fetchData"
+  >
+    <template #prepend>
+      <v-btn icon @click="clearStatus">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </template>
+  </v-select>
   <v-list v-for="training in visibleTrainings" :key="training.id">
     <Training :training-data="training" v-on:forceUpdate="fetchData" />
   </v-list>

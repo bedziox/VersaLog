@@ -24,8 +24,8 @@ export default {
 </script>
 
 <template class="flex-column">
-  <h1>DASHBOARD</h1>
-  <v-container>
+  <v-card>
+    <h1>DASHBOARD</h1>
     <AdminUserSelect
       v-if="userStore.$state.isAdmin"
       v-on:userSelected="receiveUser"
@@ -44,7 +44,7 @@ export default {
       v-if="userStore.$state.isAdmin"
       :selected-user="selectedUserStore.User"
     ></AddTrainingAdmin>
-  </v-container>
+  </v-card>
 </template>
 
 <style scoped>
@@ -54,5 +54,8 @@ export default {
   background-color: #ffffff;
   margin-bottom: 10px;
   opacity: 100%;
+}
+.v-card {
+  padding: 15px;
 }
 </style>

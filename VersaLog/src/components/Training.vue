@@ -83,6 +83,16 @@ export default {
         }
       }
     },
+    getClassByStatus(status) {
+      const statusClasses = {
+        New: "border-new",
+        InProgress: "border-inprogress",
+        Done: "border-done",
+        Cancelled: "border-cancelled",
+        Outdated: "border-outdated",
+      };
+      return statusClasses[status] || "";
+    },
   },
 };
 </script>
@@ -91,17 +101,17 @@ export default {
   <v-card class="training-item" style="max-width: 600px; margin: 5px">
     <v-card-text v-if="!isEditing">
       <v-row>
-        <v-col cols="6">
+        <v-col
+          cols="12"
+          :class="`date-status ${getClassByStatus(this.training.status)}`"
+        >
           <span
             ><b>Date assigned:</b>
             {{ formatDate(new Date(this.training.dateAssigned), "DD-MM-YYYY") }}
             <v-icon>mdi-calendar</v-icon></span
           >
-        </v-col>
-        <v-col cols="6">
-          <span class="status"><b>Status: </b> </span>
-          <span class="status"
-            >{{ this.training.status }}
+          <span
+            ><b>Status: </b>{{ this.training.status }}
             <v-icon>{{ iconPicker(this.training.status) }}</v-icon></span
           >
         </v-col>
@@ -201,6 +211,12 @@ export default {
   display: flex;
   justify-content: space-evenly;
 }
+.date-status {
+  max-width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
 .separator {
   width: 100%;
   height: 1px;
@@ -218,5 +234,30 @@ export default {
 }
 .v-list {
   width: 10rem;
+}
+.border-new {
+  border: 3px dashed lightblue;
+  padding: 5px;
+  border-radius: 4px;
+}
+.border-inprogress {
+  border: 3px dashed blue;
+  padding: 5px;
+  border-radius: 4px;
+}
+.border-done {
+  border: 3px dashed #01ee01;
+  padding: 5px;
+  border-radius: 4px;
+}
+.border-cancelled {
+  border: 3px dashed red;
+  padding: 5px;
+  border-radius: 4px;
+}
+.border-outdated {
+  border: 3px dashed yellow;
+  padding: 5px;
+  border-radius: 4px;
 }
 </style>
