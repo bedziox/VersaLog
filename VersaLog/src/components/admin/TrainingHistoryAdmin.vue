@@ -31,6 +31,8 @@ export default {
       );
     },
     async fetchData(userId) {
+      this.trainings = [];
+      this.visibleTrainings = [];
       try {
         const userStore = useUserStore();
         const response = await axios.get(
@@ -53,10 +55,14 @@ export default {
       }
       this.visibleTrainings = this.trainings.slice(0, 5);
     },
+    clearStatus() {
+      this.status = null;
+      this.fetchData(this.user.userId);
+    },
   },
   watch: {
     selectedUser() {
-      this.fetchData(this.selectedUser.userId);
+      this.fetchData(this.user.userId);
     },
   },
 };

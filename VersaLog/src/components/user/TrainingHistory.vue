@@ -32,6 +32,8 @@ export default {
       );
     },
     async fetchData() {
+      this.trainings = [];
+      this.visibleTrainings = [];
       try {
         const userStore = useUserStore();
         const response = await axios.get(
@@ -56,7 +58,6 @@ export default {
     },
     clearStatus() {
       this.status = null;
-      this.trainings = [];
       this.fetchData();
     },
   },
