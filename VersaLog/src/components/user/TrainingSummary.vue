@@ -93,6 +93,7 @@ export default {
           :items="this.exerciseTypes"
           label="Exercise Type"
           style="min-width: 10rem"
+          clearable
         ></v-autocomplete
       ></template>
     </v-tooltip>

@@ -93,6 +93,18 @@ export default {
       };
       return statusClasses[status] || "";
     },
+    getClassByExerciseType(exerciseType) {
+      const exerciseTypeClass = {
+        Strength: "exercise-strength",
+        Balance: "exercise-balance",
+        Cycling: "exercise-cycling",
+        Flexibility: "exercise-flexibility",
+        Aerobic: "exercise-aerobic",
+        Jogging: "exercise-jogging",
+        TeamGame: "exercise-teamgame",
+      };
+      return exerciseTypeClass[exerciseType] || "";
+    },
   },
 };
 </script>
@@ -118,22 +130,28 @@ export default {
         <v-col cols="12" class="exercises-and-results">
           <template v-if="this.training.exerciseResults.length">
             <v-list
-              v-for="exercise in this.training.exerciseResults"
-              :key="exercise.id"
+              v-for="exerciseResult in this.training.exerciseResults"
+              :key="exerciseResult.id"
               style="margin: 5px"
             >
-              <v-card style="min-width: 5rem; min-height: 5rem; height: 10rem">
+              <v-card
+                :class="`${getClassByExerciseType(exerciseResult.exercise.type)}`"
+                style="min-width: 5rem; min-height: 5rem; height: 10rem"
+              >
                 <v-card-title v-bind="props"
-                  >{{ exercise.exercise.name }}
+                  >{{ exerciseResult.exercise.name }}
                   <v-tooltip activator="parent" location="top"
-                    >{{ exercise.exercise.description }}
+                    >{{ exerciseResult.exercise.description }}
                   </v-tooltip></v-card-title
                 >
-                <v-card-subtitle>{{ exercise.exercise.type }}</v-card-subtitle>
+                <v-card-subtitle>{{
+                  exerciseResult.exercise.type
+                }}</v-card-subtitle>
                 <v-card-text
-                  >{{ exercise.sets }} / {{ exercise.reps }}</v-card-text
+                  >{{ exerciseResult.sets }} /
+                  {{ exerciseResult.reps }}</v-card-text
                 >
-                <v-card-text>{{ exercise.result }}</v-card-text>
+                <v-card-text>{{ exerciseResult.result }}</v-card-text>
               </v-card>
             </v-list>
           </template>
@@ -171,8 +189,8 @@ export default {
               </v-text-field>
               <v-text-field label="Reps" v-model="exercise.reps">
               </v-text-field>
-              <v-text-field label="Result" v-model="exercise.result">
-              </v-text-field>
+              <v-textarea label="Result" v-model="exercise.result">
+              </v-textarea>
               <v-btn
                 icon="mdi-delete"
                 @click="removeExercise(exercise)"
@@ -182,7 +200,7 @@ export default {
         </v-col>
         <v-col>
           <span>Notes:</span>
-          <v-text-field v-model="this.training.note"> </v-text-field>
+          <v-textarea v-model="this.training.note" clearable> </v-textarea>
         </v-col>
       </v-row>
     </v-card-text>
@@ -223,7 +241,10 @@ export default {
   background-color: #ddd;
 }
 .v-text-field {
-  min-width: 5rem;
+  min-width: 80%;
+}
+.v-card > .v-textarea {
+  max-width: 80%;
 }
 
 .v-card {
@@ -259,5 +280,27 @@ export default {
   border: 3px dashed yellow;
   padding: 5px;
   border-radius: 4px;
+}
+
+.exercise-strength {
+  background-color: rgba(250, 79, 79, 0.4);
+}
+.exercise-balance {
+  background-color: rgba(146, 219, 229, 0.4);
+}
+.exercise-cycling {
+  background-color: rgba(144, 238, 144, 0.4);
+}
+.exercise-flexibility {
+  background-color: rgba(215, 174, 70, 0.4);
+}
+.exercise-aerobic {
+  background-color: rgba(255, 105, 180, 0.4);
+}
+.exercise-jogging {
+  background-color: rgba(204, 204, 255, 0.4);
+}
+.exercise-teamgame {
+  background-color: rgba(247, 202, 201, 0.4);
 }
 </style>
