@@ -180,20 +180,22 @@ export default {
         <v-card-text>Exercises:</v-card-text>
         <v-col cols="12" class="exercises-and-results">
           <v-list
-            v-for="exercise in this.training.exerciseResults"
-            :key="exercise.id"
+            v-for="exerciseResult in this.training.exerciseResults"
+            :key="exerciseResult.id"
           >
-            <v-card>
-              <v-card-text> {{ exercise.exercise.name }}</v-card-text>
-              <v-text-field label="Sets" v-model="exercise.sets">
+            <v-card
+              :class="`${getClassByExerciseType(exerciseResult.exercise.type)}`"
+            >
+              <v-card-text> {{ exerciseResult.exercise.name }}</v-card-text>
+              <v-text-field label="Sets" v-model="exerciseResult.sets">
               </v-text-field>
-              <v-text-field label="Reps" v-model="exercise.reps">
+              <v-text-field label="Reps" v-model="exerciseResult.reps">
               </v-text-field>
-              <v-textarea label="Result" v-model="exercise.result">
+              <v-textarea label="Result" v-model="exerciseResult.result">
               </v-textarea>
               <v-btn
                 icon="mdi-delete"
-                @click="removeExercise(exercise)"
+                @click="removeExercise(exerciseResult)"
               ></v-btn>
             </v-card>
           </v-list>
