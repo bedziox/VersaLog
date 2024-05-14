@@ -259,31 +259,25 @@ export default {
   width: 10rem;
 }
 .border-new {
-  border: 3px dashed lightblue;
-  padding: 5px;
-  border-radius: 4px;
+  background-color: rgba(84, 231, 236, 0.2);
+  border-radius: 10px;
 }
 .border-inprogress {
-  border: 3px dashed blue;
-  padding: 5px;
-  border-radius: 4px;
+  background-color: rgba(39, 110, 250, 0.2);
+  border-radius: 10px;
 }
 .border-done {
-  border: 3px dashed #01ee01;
-  padding: 5px;
-  border-radius: 4px;
+  background-color: rgba(92, 252, 38, 0.2);
+  border-radius: 10px;
 }
 .border-cancelled {
-  border: 3px dashed red;
-  padding: 5px;
-  border-radius: 4px;
+  background-color: rgba(255, 22, 22, 0.2);
+  border-radius: 10px;
 }
 .border-outdated {
-  border: 3px dashed yellow;
-  padding: 5px;
-  border-radius: 4px;
+  background-color: rgba(255, 249, 62, 0.2);
+  border-radius: 10px;
 }
-
 .exercise-strength {
   background-color: rgba(250, 79, 79, 0.4);
 }

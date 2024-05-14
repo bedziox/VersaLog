@@ -22,7 +22,9 @@ export default defineComponent({
           {
             params: {
               userId: userStore.getId,
-              dateStart: new Date(new Date().setHours(0, 0, 0, 0)),
+              dateStart: new Date(
+                new Date().setHours(2, 0, 0, 0),
+              ).toUTCString(),
             },
           },
         );

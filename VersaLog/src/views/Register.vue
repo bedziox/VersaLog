@@ -33,7 +33,7 @@
         <v-btn type="submit" color="primary" block class="mt-2">Register</v-btn>
       </v-form>
       <div class="login-span">
-        <p class="text-body-2">
+        <p class="text-body-2" style="padding: 10px">
           Already have an account?
           <v-btn><router-link to="/login">Login</router-link></v-btn>
         </p>

@@ -18,7 +18,7 @@
         <v-btn type="submit" color="primary" block class="">Login</v-btn>
       </v-form>
       <div class="register-span">
-        <p class="text-body-2">
+        <p class="text-body-2" style="padding: 10px">
           Don't have an account?
           <v-btn><router-link to="/register">Register</router-link></v-btn>
         </p>

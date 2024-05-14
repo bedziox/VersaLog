@@ -79,28 +79,23 @@ td {
 }
 
 .border-new {
-  border: 2px dashed lightblue;
-  padding: 5px;
-  border-radius: 4px;
+  background-color: rgba(84, 231, 236, 0.2);
+  border-radius: 10px;
 }
 .border-inprogress {
-  border: 2px dashed blue;
-  padding: 5px;
-  border-radius: 4px;
+  background-color: rgba(39, 110, 250, 0.2);
+  border-radius: 10px;
 }
 .border-done {
-  border: 2px dashed #01ee01;
-  padding: 5px;
-  border-radius: 4px;
+  background-color: rgba(92, 252, 38, 0.2);
+  border-radius: 10px;
 }
 .border-cancelled {
-  border: 2px dashed red;
-  padding: 5px;
-  border-radius: 4px;
+  background-color: rgba(255, 22, 22, 0.2);
+  border-radius: 10px;
 }
 .border-outdated {
-  border: 2px dashed yellow;
-  padding: 5px;
-  border-radius: 4px;
+  background-color: rgba(255, 249, 62, 0.2);
+  border-radius: 10px;
 }
 </style>
